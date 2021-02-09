@@ -1,6 +1,7 @@
 
-## ESP-Drone
+## ESP-Drone-NH
 
+Forked from [ESP-Drone](https://github.com/espressif/esp-drone)
 * [中文](./README_cn.md)
 
 ### Introduction
@@ -39,4 +40,3 @@ Additional third party copyrighted code is included under the following licenses
 1. Thanks to Bitcraze for the great [Crazyflie project](https://www.bitcraze.io/%20).
 2. Thanks to Espressif for the powerful [ESP-IDF framework](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html).
 3. Thanks to WhyEngineer for the useful [ESP-DSP lib](https://github.com/whyengineer/esp32-lin/tree/master/components/dsp_lib).
-
