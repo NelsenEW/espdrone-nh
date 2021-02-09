@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.shell.windows": "cmd.exe",
+		"terminal.integrated.shellArgs.windows": [
+			"/k",
+			"C:/espressif/esp-idf/export.bat"
+		],
+		"files.associations": {
+			"freertos.h": "c",
+			"task.h": "c",
+			"portmacro.h": "c",
+			"stm32_legacy.h": "c",
+			"system.h": "c",
+			"debug_cf.h": "c",
+			"platform.h": "c",
+			"stdio.h": "c",
+			"stdlib.h": "c",
+			"stdint.h": "c",
+			"nvs_flash.h": "c"
+		},
+	}
+}
