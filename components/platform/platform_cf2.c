@@ -30,10 +30,16 @@
 
 /*to support different hardware platform */
 static platformConfig_t configs[] = {
-
+    {
+        .deviceType = "EDNH",
+        .deviceTypeName = "ESP_DRONE_NH_V1",
+        .sensorImplementation = SensorImplementation_mpu6050_HMC5883L_MS5611,
+        .physicalLayoutAntennasAreClose = false,
+        .motorMap = motorMapDefaultBrushed,
+    },
     {
         .deviceType = "EP20",
-        .deviceTypeName = "ESPlane 2.0 ",
+        .deviceTypeName = "ESPlane 2.0",
         .sensorImplementation = SensorImplementation_mpu6050_HMC5883L_MS5611,
         .physicalLayoutAntennasAreClose = false,
         .motorMap = motorMapDefaultBrushed,

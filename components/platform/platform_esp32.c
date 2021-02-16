@@ -32,7 +32,7 @@
 #endif
 
 
-#define DEFAULT_PLATFORM_STRING "0;EP20"
+#define DEFAULT_PLATFORM_STRING "0;EDNH"
 
 
 #ifndef UNIT_TEST_MODE

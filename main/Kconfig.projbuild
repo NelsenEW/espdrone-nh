@@ -3,7 +3,10 @@ menu "ESPDrone Config"
     choice
         prompt "ESP_Drone hardware version"
         default TARGET_ESP32_S2_DRONE_V1_2 if IDF_TARGET_ESP32S2
-        default TARGET_ESPLANE_V1 if IDF_TARGET_ESP32
+        default TARGET_ESPDRONE_NH_V1 if IDF_TARGET_ESP32
+
+        config TARGET_ESPDRONE_NH_V1
+            bool "esp-drone-NH for DIP with esp32 onboard"
 
         config TARGET_ESPLANE_V1
             bool "esplane with esp32 onboard(old version )"
@@ -48,7 +51,20 @@ menu "ESPDrone Config"
             help
                 This enables assit mode when use old version app.
     endmenu
-        
+    
+    menu "AP Configuration"
+        config AP_SSID
+            string "AP SSID"
+            default "ESP-DRONE"
+            help
+                AP SSID of ESP drone, maximum 32 characters
+        config AP_PWD
+            string  "AP PASSWORD"
+            default "12345678"
+            help
+                AP Password of ESP drone, maximum 32 characters
+    endmenu
+
     menu "calibration angle"
         config PITCH_CALIB
             int "PITCH_CALIB deg*100"
@@ -69,10 +85,11 @@ menu "ESPDrone Config"
 
         config BASE_STACK_SIZE
             int "base stack size for system task"
-            range 512 1024
+            range 512 8192
             default 512 if TARGET_ESPLANE_V2_S2
             default 512 if TARGET_ESP32_S2_DRONE_V1_2
             default 1024 if TARGET_ESPLANE_V1
+            default 2048 if TARGET_ESPDRONE_NH_V1
 
     endmenu
 
@@ -80,12 +97,14 @@ menu "ESPDrone Config"
 
         config BUZZER_ON
             bool "enable buzzer to play sound"
-            default y
+            default n
 
         config BUZ1_PIN_POS
             int "BUZ1_PIN_POS GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 27 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 39 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -97,6 +116,8 @@ menu "ESPDrone Config"
             int "BUZ2_PIN_NEG GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 26 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 38 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -111,6 +132,8 @@ menu "ESPDrone Config"
             int "I2C0_PIN_SDA GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 21 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 22 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 11 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -122,6 +145,8 @@ menu "ESPDrone Config"
             int "I2C0_PIN_SCL GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 22 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 23 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 10 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -133,6 +158,8 @@ menu "ESPDrone Config"
             int "I2C1_PIN_SDA GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 16 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 12 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 40 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -144,6 +171,8 @@ menu "ESPDrone Config"
             int "I2C1_PIN_SCL GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 17 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 14 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 41 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -155,6 +184,8 @@ menu "ESPDrone Config"
             int "SPI_PIN_MISO GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 12 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 37 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -166,6 +197,8 @@ menu "ESPDrone Config"
             int "SPI_PIN_MOSI GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 13 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 35 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -177,6 +210,8 @@ menu "ESPDrone Config"
             int "SPI_PIN_CLK GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 14 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 36 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -188,6 +223,8 @@ menu "ESPDrone Config"
             int "SPI_PIN_CS0 GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 15 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 34 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -199,6 +236,8 @@ menu "ESPDrone Config"
             int "MPU_PIN_INT GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 19 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 21 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 12 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -207,9 +246,11 @@ menu "ESPDrone Config"
                 GPIO number (IOxx) MPU_PIN_INT
 
         config ADC1_PIN
-            int "EXT01_PIN GPIO number"
+            int "ADC1_PIN GPIO number"
             range 32 39 if TARGET_ESPLANE_V1
             default 35 if TARGET_ESPLANE_V1
+            range 32 39 if TARGET_ESPDRONE_NH_V1
+            default 35 if TARGET_ESPDRONE_NH_V1
             range 1 10 if TARGET_ESPLANE_V2_S2
             default 2 if TARGET_ESPLANE_V2_S2
             range 1 10 if TARGET_ESP32_S2_DRONE_V1_2
@@ -221,6 +262,8 @@ menu "ESPDrone Config"
             int "EXT01_PIN GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 34 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 1 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -234,6 +277,8 @@ menu "ESPDrone Config"
             int "LED_PIN_BLUE GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 18 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 13 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 7 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -245,6 +290,8 @@ menu "ESPDrone Config"
             int "LED_PIN_GREEN GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 5 if TARGET_ESPLANE_V1
+            range -1 34 if TARGET_ESPDRONE_NH_V1
+            default -1 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 9 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -256,6 +303,8 @@ menu "ESPDrone Config"
             int "LED_PIN_RED GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 23 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 33 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 8 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -268,7 +317,7 @@ menu "ESPDrone Config"
     menu "motors config"
         choice
             prompt "Motor type"
-            default MOTOR_BRUSHED_715 if TARGET_ESPLANE_V1 || TARGET_ESPLANE_V2_S2
+            default MOTOR_BRUSHED_715 if TARGET_ESPLANE_V1 || TARGET_ESPLANE_V2_S2 || TARGET_ESPDRONE_NH_V1
             default MOTOR_BRUSHED_720 if TARGET_ESP32_S2_DRONE_V1_2
             
             config MOTOR_BRUSHED_715
@@ -282,6 +331,8 @@ menu "ESPDrone Config"
             int "MOTOR01_PIN GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 4 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 25 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 3 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -293,6 +344,8 @@ menu "ESPDrone Config"
             int "MOTOR02_PIN GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 33 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 32 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 4 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -304,6 +357,8 @@ menu "ESPDrone Config"
             int "MOTOR03_PIN GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 32 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 19 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 5 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -315,6 +370,8 @@ menu "ESPDrone Config"
             int "MOTOR04_PIN GPIO number"
             range 0 34 if TARGET_ESPLANE_V1
             default 25 if TARGET_ESPLANE_V1
+            range 0 34 if TARGET_ESPDRONE_NH_V1
+            default 18 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 6 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2

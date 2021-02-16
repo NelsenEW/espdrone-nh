@@ -50,6 +50,8 @@
   #define TARGET_MCU_ESP32S2
 #elif defined(CONFIG_TARGET_ESPLANE_V1)
   #define TARGET_MCU_ESP32
+#elif defined(CONFIG_TARGET_ESPDRONE_NH_V1)
+  #define TARGET_MCU_ESP32
 #elif defined(CONFIG_TARGET_ESP32_S2_DRONE_V1_2)
   #define TARGET_MCU_ESP32S2
 #endif

@@ -141,7 +141,7 @@ static struct this_s this = {
 
 //thrustBase should just lift the drone
 #ifdef CONFIG_MOTOR_BRUSHED_715
-  #ifdef CONFIG_TARGET_ESP32_S2_DRONE_V1_2
+  #if defined(CONFIG_TARGET_ESP32_S2_DRONE_V1_2) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
   .thrustBase = 42000,
   .thrustMin  = 8000,
   #else

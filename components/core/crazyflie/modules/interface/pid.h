@@ -31,7 +31,7 @@
 #include <stdbool.h>
 #include "filter.h"
 
-#ifdef CONFIG_TARGET_ESP32_S2_DRONE_V1_2
+#if defined(CONFIG_TARGET_ESP32_S2_DRONE_V1_2) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
   #define PID_ROLL_RATE_KP  190.0
   #define PID_ROLL_RATE_KI  440.0
   #define PID_ROLL_RATE_KD  2.6

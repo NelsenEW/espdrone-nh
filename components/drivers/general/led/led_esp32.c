@@ -31,12 +31,16 @@
 static unsigned int led_pin[] = {
     [LED_BLUE] = LED_GPIO_BLUE,
     [LED_RED]   = LED_GPIO_RED,
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     [LED_GREEN] = LED_GPIO_GREEN,
+    #endif
 };
 static int led_polarity[] = {
     [LED_BLUE] = LED_POL_BLUE,
     [LED_RED]   = LED_POL_RED,
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     [LED_GREEN] = LED_POL_GREEN,
+    #endif
 };
 
 static bool isInit = false;
@@ -71,11 +75,15 @@ void ledInit()
 }
 
 bool ledTest(void)
-{
+{   
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     ledSet(LED_GREEN, 1);
+    #endif
     ledSet(LED_RED, 0);
     vTaskDelay(M2T(250));
-    ledSet(LED_GREEN, 0);
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
+    ledSet(LED_GREEN, 1);
+    #endif
     ledSet(LED_RED, 1);
     vTaskDelay(M2T(250));
     // LED test end
