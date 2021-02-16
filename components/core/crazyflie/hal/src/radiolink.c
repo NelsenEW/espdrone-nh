@@ -160,7 +160,9 @@ void radiolinkSyslinkDispatch(SyslinkPacket *slp)
   {
     slp->length--; // Decrease to get CRTP size.
     xQueueSend(crtpPacketDelivery, &slp->length, 0);
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     ledseqRun(LINK_LED, seq_linkup);
+    #endif
     // If a radio packet is received, one can be sent
     if (xQueueReceive(txQueue, &txPacket, 0) == pdTRUE)
     {
@@ -171,7 +173,9 @@ void radiolinkSyslinkDispatch(SyslinkPacket *slp)
   {
     slp->length--; // Decrease to get CRTP size.
     xQueueSend(crtpPacketDelivery, &slp->length, 0);
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     ledseqRun(LINK_LED, seq_linkup);
+    #endif
     // no ack for broadcasts
   } else if (slp->type == SYSLINK_RADIO_RSSI)
   {
@@ -179,7 +183,9 @@ void radiolinkSyslinkDispatch(SyslinkPacket *slp)
     memcpy(&rssi, slp->data, sizeof(uint8_t)); //rssi will not change on disconnect
   } else if (slp->type == SYSLINK_RADIO_P2P_BROADCAST)
   {
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     ledseqRun(LINK_LED, seq_linkup);
+    #endif
     P2PPacket p2pp;
     p2pp.port=slp->data[0];
     p2pp.rssi = slp->data[1];

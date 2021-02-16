@@ -143,10 +143,9 @@ bool systemTest()
 void systemTask(void *arg)
 {
   bool pass = true;
-
   ledInit();
   wifiInit();
-  vTaskDelay(M2T(500));
+  vTaskDelay(M2T(2000));
 
 #ifdef DEBUG_QUEUE_MONITOR
   queueMonitorInit();
@@ -208,7 +207,9 @@ void systemTask(void *arg)
     DEBUG_PRINTI("systemStart ! selftestPassed = %d", selftestPassed);
     soundSetEffect(SND_STARTUP);
     ledseqRun(SYS_LED, seq_alive);
-    ledseqRun(LINK_LED, seq_testPassed);
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
+    ledseqRun(LINK_LED, seq_linkup);
+    #endif
   }
   else
   {

@@ -85,7 +85,9 @@ static int usblinkReceiveCRTPPacket(CRTPPacket *p)
 {
   if (xQueueReceive(crtpPacketDelivery, p, M2T(100)) == pdTRUE)
   {
+    #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
     ledseqRun(LINK_LED, seq_linkup);
+    #endif
     return 0;
   }
 
