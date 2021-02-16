@@ -25,8 +25,8 @@
 static struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
 
 //#define WIFI_SSID      "Udp Server"
-static char WIFI_SSID[32] = "ESP-DRONE";
-static char WIFI_PWD[64] = "12345678" ;
+static char WIFI_SSID[32] = CONFIG_AP_SSID;
+static char WIFI_PWD[64] = CONFIG_AP_PWD;
 #define MAX_STA_CONN (1)
 
 static char rx_buffer[UDP_SERVER_BUFSIZE];
@@ -221,8 +221,8 @@ void wifiInit(void)
                     NULL,
                     NULL));
 
-    ESP_ERROR_CHECK(esp_wifi_get_mac(ESP_IF_WIFI_AP, mac));
-    sprintf(WIFI_SSID, "ESP-DRONE_%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    // ESP_ERROR_CHECK(esp_wifi_get_mac(ESP_IF_WIFI_AP, mac));
+    // sprintf(WIFI_SSID, "ESP-DRONE_%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
     wifi_config_t wifi_config;
     memcpy(wifi_config.ap.ssid, WIFI_SSID, strlen(WIFI_SSID) + 1) ;
@@ -249,7 +249,7 @@ void wifiInit(void)
     ESP_ERROR_CHECK(esp_netif_set_ip_info(ap_netif, &ip_info));
     ESP_ERROR_CHECK(esp_netif_dhcps_start(ap_netif));
 
-    DEBUG_PRINT_LOCAL("wifi_init_softap complete.SSID:%s password:%s", WIFI_SSID, WIFI_PWD);
+    DEBUG_PRINT_LOCAL("wifi_init_softap complete.SSID:%s, password:%s", WIFI_SSID, WIFI_PWD);
 
     // This should probably be reduced to a CRTP packet size
     udpDataRx = xQueueCreate(5, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
