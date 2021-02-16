@@ -64,7 +64,7 @@
  * Enable 250Hz digital LPF mode. However does not work with
  * multiple slave reading through MPU9250 (MAG and BARO), only single for some reason.
  */
-//#define SENSORS_mpu6050_DLPF_256HZ
+#define SENSORS_mpu6050_DLPF_256HZ
 
 //#define GYRO_ADD_RAW_AND_VARIANCE_LOG_VALUES
 
@@ -76,8 +76,8 @@
 // #define SENSORS_ENABLE_MAG_HM5883L
 // #define SENSORS_ENABLE_PRESSURE_MS5611
 //#define SENSORS_ENABLE_RANGE_VL53L0X
-#define SENSORS_ENABLE_RANGE_VL53L1X
-#define SENSORS_ENABLE_FLOW_PMW3901
+// #define SENSORS_ENABLE_RANGE_VL53L1X
+// #define SENSORS_ENABLE_FLOW_PMW3901
 
 #define SENSORS_GYRO_FS_CFG MPU6050_GYRO_FS_2000
 #define SENSORS_DEG_PER_LSB_CFG MPU6050_DEG_PER_LSB_2000
@@ -332,7 +332,7 @@ void processAccGyroMeasurements(const uint8_t *buffer)
 
     Axis3f accScaled;
 
-#ifdef CONFIG_TARGET_ESPLANE_V1
+#if defined(CONFIG_TARGET_ESPLANE_V1) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
     /* sensors step 2.1 read from buffer */
     accelRaw.x = (((int16_t)buffer[0]) << 8) | buffer[1];
     accelRaw.y = (((int16_t)buffer[2]) << 8) | buffer[3];
@@ -363,7 +363,7 @@ void processAccGyroMeasurements(const uint8_t *buffer)
     }
 
     /* sensors step 2.4 convert  digtal value to physical angle */
-#ifdef CONFIG_TARGET_ESPLANE_V1
+#if defined(CONFIG_TARGET_ESPLANE_V1) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
     sensorData.gyro.x = (gyroRaw.x - gyroBias.x) * SENSORS_DEG_PER_LSB_CFG;
 #else
     sensorData.gyro.x = -(gyroRaw.x - gyroBias.x) * SENSORS_DEG_PER_LSB_CFG;
@@ -374,7 +374,7 @@ void processAccGyroMeasurements(const uint8_t *buffer)
     /* sensors step 2.5 low pass filter */
     applyAxis3fLpf((lpf2pData *)(&gyroLpf), &sensorData.gyro);
 
-#ifdef CONFIG_TARGET_ESPLANE_V1
+#if defined(CONFIG_TARGET_ESPLANE_V1) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
     accScaled.x = (accelRaw.x) * SENSORS_G_PER_LSB_CFG / accScale;
 #else
     accScaled.x = -(accelRaw.x) * SENSORS_G_PER_LSB_CFG / accScale;   
@@ -435,7 +435,7 @@ static void sensorsDeviceInit(void)
     mpu6050SetRate(7);
     // Set digital low-pass bandwidth
     mpu6050SetDLPFMode(MPU6050_DLPF_BW_256);
-#elif defined(CONFIG_TARGET_ESP32_S2_DRONE_V1_2)
+#elif defined(CONFIG_TARGET_ESP32_S2_DRONE_V1_2) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
     // To low DLPF bandwidth might cause instability and decrease agility
     // but it works well for handling vibrations and unbalanced propellers
     // Set output rate (1): 1000 / (1 + 0) = 1000Hz
@@ -999,7 +999,7 @@ void sensorsMpu6050Hmc5883lMs5611SetAccMode(accModes accMode)
     case ACC_MODE_FLIGHT:
     default:
         mpu6050SetRate(0);
-#ifdef CONFIG_TARGET_ESP32_S2_DRONE_V1_2
+#if defined(CONFIG_TARGET_ESP32_S2_DRONE_V1_2) || defined(CONFIG_TARGET_ESPDRONE_NH_V1)
         mpu6050SetDLPFMode(MPU6050_DLPF_BW_42);
         for (uint8_t i = 0; i < 3; i++) {
         lpf2pInit(&accLpf[i], 1000, ACCEL_LPF_CUTOFF_FREQ);
