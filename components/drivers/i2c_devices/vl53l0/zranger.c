@@ -116,12 +116,12 @@ static int16_t zRangerGetMeasurementAndRestart(VL53L0xDev *dev)
 	return range = range1;
 }
 
-void zRangerInit(void)
+void zRangerInit(I2C_Dev *i2cPort)
 {
   if (isInit)
     return;
 
-  dev.I2Cx = 0;
+  dev.I2Cx = i2cPort;
   dev.devAddr = VL53L0X_DEFAULT_ADDRESS;
   i2cdevInit(dev.I2Cx);
 
@@ -137,14 +137,13 @@ void zRangerInit(void)
   uint16_t wordData;
   wordData = vl53l0xGetModelID(&dev);
   DEBUG_PRINTI( "VL53L0X: %02X\n\r", wordData);
-
   if(wordData == VL53L0X_ID)
 	{
-    DEBUG_PRINT( "VL53L0X I2C commection [OK].\n");
+    DEBUG_PRINT( "VL53L0X I2C connection [OK].\n");
   }
-
-  vl53l0xInit(&dev, I2C1_DEV, true);
-
+  DEBUG_PRINTI("VL53L0x init");
+  vl53l0xInit(&dev, I2C0_DEV, true);
+  DEBUG_PRINTI("VL53L0x init successful");
   xTaskCreate(zRangerTask, ZRANGER_TASK_NAME, ZRANGER_TASK_STACKSIZE, NULL, ZRANGER_TASK_PRI, NULL);
 
   // pre-compute constant in the measurement noise model for kalman
@@ -159,7 +158,7 @@ bool zRangerTest(void)
 
   if (!isInit)
     return false;
-
+  DEBUG_PRINTI("Testing VL53L0x");
   testStatus  = vl53l0xTestConnection(&dev);
 
   return testStatus;
@@ -181,7 +180,7 @@ void zRangerTask(void* arg)
 
     range_last = zRangerGetMeasurementAndRestart(&dev);
     rangeSet(rangeDown, range_last / 1000.0f);
-    DEBUG_PRINTD("ZRANGE = %f",range_last/ 1000.0f);
+    DEBUG_PRINTI("ZRANGE = %f",range_last/ 1000.0f);
 
     // check if range is feasible and push into the estimator
     // the sensor should not be able to measure >3 [m], and outliers typically

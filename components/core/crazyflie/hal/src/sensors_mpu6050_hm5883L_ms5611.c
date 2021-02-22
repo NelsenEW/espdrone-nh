@@ -75,7 +75,7 @@
  */
 // #define SENSORS_ENABLE_MAG_HM5883L
 // #define SENSORS_ENABLE_PRESSURE_MS5611
-//#define SENSORS_ENABLE_RANGE_VL53L0X
+#define SENSORS_ENABLE_RANGE_VL53L0X
 // #define SENSORS_ENABLE_RANGE_VL53L1X
 // #define SENSORS_ENABLE_FLOW_PMW3901
 
@@ -495,7 +495,7 @@ static void sensorsDeviceInit(void)
 #endif
 
 #ifdef SENSORS_ENABLE_RANGE_VL53L0X
-    zRangerInit();
+    zRangerInit(I2C0_DEV);
 
     if (zRangerTest() == true) {
         isVl53l0xPresent = true;

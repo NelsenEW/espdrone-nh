@@ -26,7 +26,7 @@
 #include "stabilizer_types.h"
 //#include "deck_core.h"
 
-void zRangerInit(void);//DeckInfo* info);
+void zRangerInit(I2C_Dev *i2cPort);//DeckInfo* info);
 
 bool zRangerTest(void);
 void zRangerTask(void* arg);

@@ -88,7 +88,7 @@
 #define CRTP_TX_TASK_PRI        2
 #define CRTP_RX_TASK_PRI        2
 #define EXTRX_TASK_PRI          2
-#define ZRANGER_TASK_PRI        2
+#define ZRANGER_TASK_PRI        1
 #define ZRANGER2_TASK_PRI       2
 #define PROXIMITY_TASK_PRI      0
 #define PM_TASK_PRI             0
@@ -202,7 +202,7 @@
 #define PROXIMITY_TASK_STACKSIZE      (1 * configBASE_STACK_SIZE)
 #define EXTRX_TASK_STACKSIZE          (1 * configBASE_STACK_SIZE)
 #define UART_RX_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
-#define ZRANGER_TASK_STACKSIZE        (2 * configBASE_STACK_SIZE)
+#define ZRANGER_TASK_STACKSIZE        (3 * configBASE_STACK_SIZE)
 #define ZRANGER2_TASK_STACKSIZE       (3 * configBASE_STACK_SIZE)
 #define FLOW_TASK_STACKSIZE           (2 * configBASE_STACK_SIZE)
 #define USDLOG_TASK_STACKSIZE         (2 * configBASE_STACK_SIZE)

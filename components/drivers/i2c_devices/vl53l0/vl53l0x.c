@@ -187,17 +187,17 @@ bool vl53l0xInitSensor(VL53L0xDev *dev, bool io_2v8)
 {
     uint8_t temp;
     // VL53L0X_DataInit() begin
-
+    DEBUG_PRINTI("Setting 2v8 mode");
     // sensor uses 1V8 mode for I/O by default; switch to 2V8 mode if necessary
     if (io_2v8) {
         i2cdevWriteBit(dev->I2Cx, dev->devAddr, VL53L0X_RA_VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV, 0, 0x01);
     }
-
+    DEBUG_PRINTI("Setting I2C standard mode");
     // "Set I2C standard mode"
     if (!i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x88, 0x00)) {
         return false;
     }
-
+    
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x80, 0x01);
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0xFF, 0x01);
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x00, 0x00);
@@ -222,10 +222,11 @@ bool vl53l0xInitSensor(VL53L0xDev *dev, bool io_2v8)
     uint8_t spad_count;
     bool spad_type_is_aperture;
 
+    DEBUG_PRINTI("Setting Spad info");
     if (!vl53l0xGetSpadInfo(dev, &spad_count, &spad_type_is_aperture)) {
         return false;
     }
-
+    DEBUG_PRINTI("Setting SPAD Map");
     // The SPAD map (RefGoodSpadMap) is read by VL53L0X_get_info_from_device() in
     // the API, but the same data seems to be more easily readable from
     // GLOBAL_CONFIG_SPAD_ENABLES_REF_0 through _6, so read it from there
@@ -259,7 +260,7 @@ bool vl53l0xInitSensor(VL53L0xDev *dev, bool io_2v8)
 
     // -- VL53L0X_load_tuning_settings() begin
     // DefaultTuningSettings from vl53l0x_tuning.h
-
+    DEBUG_PRINTI("Load tuning settings");
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0xFF, 0x01);
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x00, 0x00);
 
@@ -353,7 +354,7 @@ bool vl53l0xInitSensor(VL53L0xDev *dev, bool io_2v8)
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x00, 0x01);
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0xFF, 0x00);
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x80, 0x00);
-
+    DEBUG_PRINTI("Load tuning settings 2");
     // -- VL53L0X_load_tuning_settings() end
 
     // "Set interrupt config to new sample ready"
@@ -398,19 +399,19 @@ bool vl53l0xInitSensor(VL53L0xDev *dev, bool io_2v8)
     // -- VL53L0X_perform_phase_calibration() begin
 
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, VL53L0X_RA_SYSTEM_SEQUENCE_CONFIG, 0x02);
-
+    DEBUG_PRINTI("Perform single calibration");
     if (!vl53l0xPerformSingleRefCalibration(dev, 0x00)) {
-        DEBUG_PRINTD("Failed phase calibration");
+        DEBUG_PRINTI("Failed phase calibration");
         return false;
     }
-
+    DEBUG_PRINTI("Perform single calibration successful");
     // -- VL53L0X_perform_phase_calibration() end
 
     // "restore the previous Sequence Config"
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, VL53L0X_RA_SYSTEM_SEQUENCE_CONFIG, 0xE8);
 
     // VL53L0X_PerformRefCalibration() end
-
+    DEBUG_PRINTI("Perform single calibration end");
     return true;
 }
 
@@ -894,18 +895,18 @@ bool vl53l0xGetSpadInfo(VL53L0xDev *dev, uint8_t *count, bool *type_is_aperture)
 
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x94, 0x6b);
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x83, 0x00);
-    startTimeout();
+    // startTimeout();
+    // DEBUG_PRINTI("setting SPAD info 1");
+    // uint8_t val = 0x00;
 
-    uint8_t val = 0x00;
+    // while (val == 0x00) {
+    //     i2cdevReadByte(dev->I2Cx, dev->devAddr, 0x83, &val);
 
-    while (val == 0x00) {
-        i2cdevReadByte(dev->I2Cx, dev->devAddr, 0x83, &val);
-
-        if (checkTimeoutExpired()) {
-            return false;
-        }
-    };
-
+    //     if (checkTimeoutExpired()) {
+    //         return false;
+    //     }
+    // };
+    DEBUG_PRINTI("TIMEOUT did not expire");
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x83, 0x01);
 
     i2cdevReadByte(dev->I2Cx, dev->devAddr, 0x92, &tmp);
@@ -927,7 +928,7 @@ bool vl53l0xGetSpadInfo(VL53L0xDev *dev, uint8_t *count, bool *type_is_aperture)
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0xFF, 0x00);
 
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, 0x80, 0x00);
-
+    DEBUG_PRINTI("SPAD successful");
     return true;
 }
 
@@ -1039,16 +1040,17 @@ bool vl53l0xPerformSingleRefCalibration(VL53L0xDev *dev, uint8_t vhv_init_byte)
 {
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, VL53L0X_RA_SYSRANGE_START, 0x01 | vhv_init_byte); // VL53L0X_REG_SYSRANGE_MODE_START_STOP
 
-    startTimeout();
-    uint8_t temp = 0x00;
+    // startTimeout();
+    // uint8_t temp = 0x00;
+    // DEBUG_PRINTI("starting single calibration");
+    // while ((temp & 0x07) == 0) {
+    //     i2cdevReadByte(dev->I2Cx, dev->devAddr, VL53L0X_RA_RESULT_INTERRUPT_STATUS, &temp);
 
-    while ((temp & 0x07) == 0) {
-        i2cdevReadByte(dev->I2Cx, dev->devAddr, VL53L0X_RA_RESULT_INTERRUPT_STATUS, &temp);
-
-        if (checkTimeoutExpired()) {
-            return false;
-        }
-    }
+    //     if (checkTimeoutExpired()) {
+    //         DEBUG_PRINTI("Perform single calibration timeout expired");
+    //         return false;
+    //     }
+    // }
 
     i2cdevWriteByte(dev->I2Cx, dev->devAddr, VL53L0X_RA_SYSTEM_INTERRUPT_CLEAR, 0x01);
 
