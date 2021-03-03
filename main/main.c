@@ -59,5 +59,6 @@ void app_main()
     }
 
     /*launch the system task */
+    vTaskDelay(M2T(2000));
     systemLaunch();
 }

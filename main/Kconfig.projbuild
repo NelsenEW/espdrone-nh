@@ -332,7 +332,7 @@ menu "ESPDrone Config"
             range 0 34 if TARGET_ESPLANE_V1
             default 4 if TARGET_ESPLANE_V1
             range 0 34 if TARGET_ESPDRONE_NH_V1
-            default 25 if TARGET_ESPDRONE_NH_V1
+            default 18 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 3 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -345,7 +345,7 @@ menu "ESPDrone Config"
             range 0 34 if TARGET_ESPLANE_V1
             default 33 if TARGET_ESPLANE_V1
             range 0 34 if TARGET_ESPDRONE_NH_V1
-            default 32 if TARGET_ESPDRONE_NH_V1
+            default 19 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 4 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -358,7 +358,7 @@ menu "ESPDrone Config"
             range 0 34 if TARGET_ESPLANE_V1
             default 32 if TARGET_ESPLANE_V1
             range 0 34 if TARGET_ESPDRONE_NH_V1
-            default 19 if TARGET_ESPDRONE_NH_V1
+            default 32 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 5 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
@@ -371,7 +371,7 @@ menu "ESPDrone Config"
             range 0 34 if TARGET_ESPLANE_V1
             default 25 if TARGET_ESPLANE_V1
             range 0 34 if TARGET_ESPDRONE_NH_V1
-            default 18 if TARGET_ESPDRONE_NH_V1
+            default 25 if TARGET_ESPDRONE_NH_V1
             range 0 43 if TARGET_ESPLANE_V2_S2
             default 6 if TARGET_ESPLANE_V2_S2
             range 0 43 if TARGET_ESP32_S2_DRONE_V1_2
