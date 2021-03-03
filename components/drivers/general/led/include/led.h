@@ -56,6 +56,7 @@
     #define LED_POL_BLUE   LED_POL_NEG
     #define LED_GPIO_RED   CONFIG_LED_PIN_RED
     #define LED_POL_RED    LED_POL_NEG
+    #define LINK_LED         LED_BLUE
     //#define CHG_LED          LED_RED
     #define LOWBAT_LED       LED_RED
     //#define LINK_DOWN_LED    LED_BLUE

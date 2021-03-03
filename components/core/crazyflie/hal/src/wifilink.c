@@ -123,9 +123,7 @@ static void wifilinkTask(void *param)
 static int wifilinkReceiveCRTPPacket(CRTPPacket *p)
 {
     if (xQueueReceive(crtpPacketDelivery, p, M2T(100)) == pdTRUE) {
-        #ifndef CONFIG_TARGET_ESPDRONE_NH_V1
-        ledseqRun(LINK_LED, seq_linkup);
-        #endif
+        ledseqRun(LINK_LED, seq_connection);
         DEBUG_PRINTD("3.wifilinkReceiveCRTPPacket got data size = %d", p->size);
         return 0;
     }

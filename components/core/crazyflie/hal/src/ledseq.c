@@ -56,6 +56,7 @@ static ledseq_t const * sequences[] = {
   seq_calibrated,
   seq_alive,
   seq_linkup,
+  seq_connection,
 };
 
 /* Led sequences */
@@ -116,6 +117,11 @@ const ledseq_t seq_linkup[] = {
   {    0, LEDSEQ_STOP},
 };
 
+const ledseq_t seq_connection[] = {
+  { true, LEDSEQ_WAITMS(300)},
+  {false, LEDSEQ_WAITMS(300)},
+  { true, LEDSEQ_STOP},
+};
 
 const ledseq_t seq_charged[] = {
   { true, LEDSEQ_WAITMS(1000)},

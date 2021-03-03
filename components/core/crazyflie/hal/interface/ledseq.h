@@ -69,6 +69,7 @@ void ledseqSetTimes(ledseq_t *sequence, int32_t onTime, int32_t offTime);
 //Existing led sequences
 extern const ledseq_t seq_armed[];
 extern const ledseq_t seq_calibrated[];
+extern const ledseq_t seq_connection[];
 extern const ledseq_t seq_alive[];
 extern const ledseq_t seq_lowbat[];
 extern const ledseq_t seq_linkup[];
