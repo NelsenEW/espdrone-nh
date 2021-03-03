@@ -79,7 +79,7 @@ void zRanger2Init(void)
   if (isInit)
     return;
 
-  if (vl53l1xInit(&dev, I2C1_DEV))
+  if (vl53l1xInit(&dev, I2C0_DEV))
   {
     DEBUG_PRINTI("Z-down sensor [OK]\n");
   }
