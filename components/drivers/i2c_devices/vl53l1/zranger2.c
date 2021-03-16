@@ -89,7 +89,7 @@ void zRanger2Init(void)
     return;
   }
 
-  xTaskCreate(zRanger2Task, ZRANGER2_TASK_NAME, ZRANGER2_TASK_STACKSIZE, NULL, ZRANGER2_TASK_PRI, NULL);
+  xTaskCreatePinnedToCore(zRanger2Task, ZRANGER2_TASK_NAME, ZRANGER2_TASK_STACKSIZE, NULL, ZRANGER2_TASK_PRI, NULL, 1);
 
   // pre-compute constant in the measurement noise model for kalman
   expCoeff = logf(expStdB / expStdA) / (expPointB - expPointA);
@@ -113,7 +113,7 @@ void zRanger2Task(void* arg)
 
   // Restart sensor
   VL53L1_StopMeasurement(&dev);
-  VL53L1_SetDistanceMode(&dev, VL53L1_DISTANCEMODE_MEDIUM);
+  VL53L1_SetDistanceMode(&dev, VL53L1_DISTANCEMODE_LONG);
   VL53L1_SetMeasurementTimingBudgetMicroSeconds(&dev, 25000);
 
   VL53L1_StartMeasurement(&dev);
