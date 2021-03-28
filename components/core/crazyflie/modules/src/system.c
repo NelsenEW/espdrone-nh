@@ -47,6 +47,7 @@
 #include "freeRTOSdebug.h"
 //#include "uart1.h"
 //#include "uart2.h"
+#include "camera_setup.h"
 #include "wifi_esp32.h"
 #include "comm.h"
 #include "stabilizer.h"
@@ -68,6 +69,7 @@
 #define DEBUG_MODULE "SYS"
 #include "debug_cf.h"
 #include "static_mem.h"
+
 
 /* Private variable */
 static bool selftestPassed;
@@ -100,7 +102,7 @@ void systemInit(void)
 
   canStartMutex = xSemaphoreCreateMutexStatic(&canStartMutexBuffer);
   xSemaphoreTake(canStartMutex, portMAX_DELAY);
-
+  
   wifilinkInit();
   sysLoadInit();
 
@@ -143,6 +145,7 @@ bool systemTest()
 void systemTask(void *arg)
 {
   bool pass = true;
+  cameraInit();
   ledInit();
   wifiInit();
   vTaskDelay(M2T(2000));

@@ -2,7 +2,6 @@
 ## ESP-Drone-NH
 
 Forked from [ESP-Drone](https://github.com/espressif/esp-drone)
-* [中文](./README_cn.md)
 
 ### Introduction
 
@@ -23,6 +22,7 @@ For more information, please check the sections below:
 3. Position-hold Mode
 4. APP Control
 5. CFclient Supported
+6. Camera streaming with httpd server
 
 Note: to implement Height-hold/Position-hold mode, extension boards are needed. For more information, see Hardware Reference. 
 
@@ -34,6 +34,7 @@ Additional third party copyrighted code is included under the following licenses
 | :---:  | :---: | :---: |:---: |
 | core/crazyflie | GPL3.0  |[Crazyflie](https://github.com/bitcraze/crazyflie-firmware) |a2a26abd53a5f328374877bfbcb7b25ed38d8111|
 | lib/dsp_lib |  | [esp32-lin](https://github.com/whyengineer/esp32-lin/tree/master/components/dsp_lib) |6fa39f4cd5f7782b3a2a052767f0fb06be2378ff|
+| lib/esp32-camera | | [esp32-cam](https://github.com/espressif/esp32-camera)| 488c308b79af2a66c285f4319b746943d6b2f893|
 
 ### THANKS
 

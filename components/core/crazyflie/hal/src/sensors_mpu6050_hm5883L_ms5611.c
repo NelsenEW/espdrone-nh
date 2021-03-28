@@ -646,7 +646,7 @@ static void sensorsInterruptInit(void)
     //install gpio isr service
     //portDISABLE_INTERRUPTS();
     gpio_set_intr_type(GPIO_INTA_MPU6050_IO, GPIO_INTR_POSEDGE);
-    gpio_install_isr_service(ESP_INTR_FLAG_DEFAULT);
+    // gpio_install_isr_service(ESP_INTR_FLAG_DEFAULT);
     //hook isr handler for specific gpio pin
     gpio_isr_handler_add(GPIO_INTA_MPU6050_IO, sensors_inta_isr_handler, (void *)GPIO_INTA_MPU6050_IO);
     //portENABLE_INTERRUPTS();

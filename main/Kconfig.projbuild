@@ -63,6 +63,11 @@ menu "ESPDrone Config"
             default "12345678"
             help
                 AP Password of ESP drone, maximum 32 characters
+        config MAX_STA_CONNECTION
+            int "MAX STA CONNECTION"
+            default 2
+            help
+                Maximum number of station connected to the access point
     endmenu
 
     menu "calibration angle"

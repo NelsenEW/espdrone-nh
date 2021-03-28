@@ -50,5 +50,6 @@ idf_component_register(SRCS "./hal/src/buzzer.c"
                 "./modules/src/system.c"
                 "./modules/src/trigger.c"
                 "./modules/src/worker.c"
+                "./modules/src/camera_setup.c"
                 INCLUDE_DIRS "./hal/interface" "./modules/interface"
-                REQUIRES i2c_bus deck mpu6050 ms5611 hmc5883l pmw3901 vl53l1 vl53l0 utils platform config led eeprom dsp_lib motors wifi adc)
+                REQUIRES i2c_bus deck mpu6050 ms5611 hmc5883l pmw3901 vl53l1 vl53l0 utils platform config led eeprom dsp_lib esp32-camera motors wifi adc)

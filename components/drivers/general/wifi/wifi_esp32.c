@@ -13,8 +13,14 @@
 #include "lwip/sys.h"
 #include <lwip/netdb.h>
 
+#include <esp_log.h>
+#include <nvs_flash.h>
+#include <sys/param.h>
+#include <esp_http_server.h>
+
 #include  "queuemonitor.h"
 #include "wifi_esp32.h"
+#include "camera_setup.h"
 #include "stm32_legacy.h"
 #define DEBUG_MODULE  "WIFI_UDP"
 #include "debug_cf.h"
@@ -27,7 +33,7 @@ static struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
 //#define WIFI_SSID      "Udp Server"
 static char WIFI_SSID[32] = CONFIG_AP_SSID;
 static char WIFI_PWD[64] = CONFIG_AP_PWD;
-#define MAX_STA_CONN (1)
+static char MAX_STA_CONN = CONFIG_MAX_STA_CONNECTION;
 
 static char rx_buffer[UDP_SERVER_BUFSIZE];
 static char tx_buffer[UDP_SERVER_BUFSIZE];
@@ -46,6 +52,12 @@ static bool isUDPInit = false;
 static bool isUDPConnected = false;
 
 static esp_err_t udp_server_create(void *arg);
+static const char *TAG = "http_stream";
+
+#define PART_BOUNDARY "123456789000000000000987654321"
+static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
+static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
+static const char* _STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
 static uint8_t calculate_cksum(void *data, size_t len)
 {
@@ -60,22 +72,127 @@ static uint8_t calculate_cksum(void *data, size_t len)
     return cksum;
 }
 
+static esp_err_t jpg_stream_httpd_handler(httpd_req_t *req){
+    camera_fb_t * fb = NULL;
+    esp_err_t res = ESP_OK;
+    size_t _jpg_buf_len;
+    uint8_t * _jpg_buf;
+    char * part_buf[64];
+    static int64_t last_frame = 0;
+    if(!last_frame) {
+        last_frame = esp_timer_get_time();
+    }
+
+    res = httpd_resp_set_type(req, _STREAM_CONTENT_TYPE);
+    if(res != ESP_OK){
+        return res;
+    }
+
+    while(true){
+        fb = esp_camera_fb_get();
+        if (!fb) {
+            ESP_LOGE(TAG, "Camera capture failed");
+            res = ESP_FAIL;
+            break;
+        }
+        if(fb->format != PIXFORMAT_JPEG){
+            bool jpeg_converted = frame2jpg(fb, 80, &_jpg_buf, &_jpg_buf_len);
+            if(!jpeg_converted){
+                ESP_LOGE(TAG, "JPEG compression failed");
+                esp_camera_fb_return(fb);
+                res = ESP_FAIL;
+            }
+        } else {
+            _jpg_buf_len = fb->len;
+            _jpg_buf = fb->buf;
+        }
+
+        if(res == ESP_OK){
+            res = httpd_resp_send_chunk(req, _STREAM_BOUNDARY, strlen(_STREAM_BOUNDARY));
+        }
+        if(res == ESP_OK){
+            size_t hlen = snprintf((char *)part_buf, 64, _STREAM_PART, _jpg_buf_len);
+
+            res = httpd_resp_send_chunk(req, (const char *)part_buf, hlen);
+        }
+        if(res == ESP_OK){
+            res = httpd_resp_send_chunk(req, (const char *)_jpg_buf, _jpg_buf_len);
+        }
+        if(fb->format != PIXFORMAT_JPEG){
+            free(_jpg_buf);
+        }
+        esp_camera_fb_return(fb);
+        if(res != ESP_OK){
+            break;
+        }
+        int64_t fr_end = esp_timer_get_time();
+        int64_t frame_time = fr_end - last_frame;
+        last_frame = fr_end;
+        frame_time /= 1000;
+        ESP_LOGI(TAG, "MJPG: %uKB %ums (%.1ffps)",
+            (uint32_t)(_jpg_buf_len/1024),
+            (uint32_t)frame_time, 1000.0 / (uint32_t)frame_time);
+    }
+
+    last_frame = 0;
+    return res;
+}
+
+
+static httpd_uri_t uri_handler_jpg = {
+    .uri = "/stream.jpg",
+    .method = HTTP_GET,
+    .handler = jpg_stream_httpd_handler};
+
+static httpd_handle_t start_webserver(void)
+{
+  httpd_handle_t server = NULL;
+  httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+
+  // Start the httpd server
+  DEBUG_PRINT_LOCAL("Starting HTTP stream server on port: '%d'", config.server_port);
+  if (httpd_start(&server, &config) == ESP_OK)
+  {
+    // Set URI handlers
+    DEBUG_PRINT_LOCAL("Registering URI handlers");
+    httpd_register_uri_handler(server, &uri_handler_jpg);
+    return server;
+  }
+  DEBUG_PRINT_LOCAL("Error starting server!");
+  return NULL;
+}
+
+static void stop_webserver(httpd_handle_t server)
+{
+  // Stop the httpd server
+  httpd_stop(server);
+}
+
 static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
-{
+{   
+    httpd_handle_t* server = (httpd_handle_t*) arg;
     if (event_id == WIFI_EVENT_AP_STACONNECTED) {
         wifi_event_ap_staconnected_t *event = (wifi_event_ap_staconnected_t *) event_data;
         DEBUG_PRINT_LOCAL("station "MACSTR" join, AID=%d",
                           MAC2STR(event->mac), event->aid);
-
+        /* Start the web server */
+        if (*server == NULL) {
+            ESP_LOGI(TAG, "Starting webserver");
+            *server = start_webserver();
+        }
     } else if (event_id == WIFI_EVENT_AP_STADISCONNECTED) {
         wifi_event_ap_stadisconnected_t *event = (wifi_event_ap_stadisconnected_t *) event_data;
         DEBUG_PRINT_LOCAL("station "MACSTR" leave, AID=%d",
                           MAC2STR(event->mac), event->aid);
+        /* Stop the web server */
+        if (*server) {
+            ESP_LOGI(TAG, "Stopping webserver");
+            stop_webserver(*server);
+            *server = NULL;
+        }  
     } 
 }
-
-
 
 bool wifiTest(void)
 {
@@ -202,27 +319,17 @@ static void udp_server_tx_task(void *pvParameters)
 
 void wifiInit(void)
 {
+    static httpd_handle_t server = NULL;
     if (isInit) {
         return;
     }
-
     esp_netif_t *ap_netif = NULL;
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     ap_netif = esp_netif_create_default_wifi_ap();
-    uint8_t mac[6];
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
-                    ESP_EVENT_ANY_ID,
-                    &wifi_event_handler,
-                    NULL,
-                    NULL));
-
-    // ESP_ERROR_CHECK(esp_wifi_get_mac(ESP_IF_WIFI_AP, mac));
-    // sprintf(WIFI_SSID, "ESP-DRONE_%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
     wifi_config_t wifi_config;
     memcpy(wifi_config.ap.ssid, WIFI_SSID, strlen(WIFI_SSID) + 1) ;
@@ -261,6 +368,14 @@ void wifiInit(void)
     } else {
         DEBUG_PRINT_LOCAL("UDP server create socket succeed!!!");
     } 
+    
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT,
+                ESP_EVENT_ANY_ID,
+                &wifi_event_handler,
+                &server));
+
+    server = start_webserver();
+    // xTaskCreate(start_webserver, HTTP_STREAM_TASK_NAME, HTTP_STREAM_TASK_STACKSIZE, NULL, HTTP_STREAM_TASK_PRI, NULL);
     xTaskCreate(udp_server_tx_task, UDP_TX_TASK_NAME, UDP_TX_TASK_STACKSIZE, NULL, UDP_TX_TASK_PRI, NULL);
     xTaskCreate(udp_server_rx_task, UDP_RX_TASK_NAME, UDP_RX_TASK_STACKSIZE, NULL, UDP_RX_TASK_PRI, NULL);
     isInit = true;
