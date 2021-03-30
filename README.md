@@ -22,9 +22,13 @@ For more information, please check the sections below:
 3. Position-hold Mode
 4. APP Control
 5. CFclient Supported
-6. Camera streaming with httpd server
+6. [Camera streaming with httpd server](docs\en\md\http_stream.md)
 
-Note: to implement Height-hold/Position-hold mode, extension boards are needed. For more information, see Hardware Reference. 
+If you already have cloned the repo without the --recursive option, you need to get the submodules manually
+```bash
+cd EEE-DIP-UAVONICS
+git submodule update --init
+```
 
 ### Third Party Copyrighted Code
 
