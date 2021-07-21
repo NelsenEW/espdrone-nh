@@ -30,6 +30,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#define DEBUG_MODULE "CRTP_LOCALIZATION"
+#include "debug_cf.h"
 #include "crtp.h"
 #include "crtp_localization_service.h"
 #include "log.h"
@@ -141,6 +143,7 @@ static void extPositionHandler(CRTPPacket* pk)
   ext_pos.y = data->y;
   ext_pos.z = data->z;
   ext_pos.stdDev = extPosStdDev;
+  DEBUG_PRINTI("Receive external position, x: %f, y: %f, z: %f", ext_pos.x, ext_pos.y, ext_pos.z);
   estimatorEnqueuePosition(&ext_pos);
   tickOfLastPacket = xTaskGetTickCount();
 }
@@ -165,6 +168,7 @@ static void genericLocHandle(CRTPPacket* pk)
   } else if (type == EMERGENCY_STOP_WATCHDOG) {
     stabilizerSetEmergencyStopTimeout(DEFAULT_EMERGENCY_STOP_TIMEOUT);
   } else if (type == EXT_POSE) {
+    
     const struct CrtpExtPose* data = (const struct CrtpExtPose*)&pk->data[1];
     ext_pose.x = data->x;
     ext_pose.y = data->y;
@@ -175,6 +179,7 @@ static void genericLocHandle(CRTPPacket* pk)
     ext_pose.quat.w = data->qw;
     ext_pose.stdDevPos = extPosStdDev;
     ext_pose.stdDevQuat = extQuatStdDev;
+    DEBUG_PRINTI("Receive external pose, x: %f, y: %f, z: %f, qx: %f, qy: %f, qz: %f, qw: %f", ext_pose.x, ext_pose.y, ext_pose.z, ext_pose.quat.x, ext_pose.quat.y, ext_pose.quat.z, ext_pose.quat.w);
     estimatorEnqueuePose(&ext_pose);
     tickOfLastPacket = xTaskGetTickCount();
   } else if (type == EXT_POSE_PACKED) {

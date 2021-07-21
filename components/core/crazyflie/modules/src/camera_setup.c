@@ -44,9 +44,7 @@ esp_err_t cameraInit()
     return err;
   }
   sensor_t * s = esp_camera_sensor_get();
-
-  //drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);
+  s->set_vflip(s, 1);
 
   return ESP_OK;
 }

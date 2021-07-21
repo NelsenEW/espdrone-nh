@@ -5,7 +5,7 @@
 #include "estimator_complementary.h"
 #include "estimator_kalman.h"
 #include "debug_cf.h"
-#define ESTIMATOR_NAME anyEstimator
+#define ESTIMATOR_NAME kalmanEstimator
 #define DEFAULT_ESTIMATOR complementaryEstimator
 static StateEstimatorType currentEstimator = anyEstimator;
 static StateEstimatorType requiredEstimator = anyEstimator;

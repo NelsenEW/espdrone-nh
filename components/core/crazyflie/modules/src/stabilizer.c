@@ -188,6 +188,7 @@ void stabilizerInit(StateEstimatorType estimator)
     estimator = deckGetRequiredEstimator();
   }
   stateEstimatorInit(estimator);
+  DEBUG_PRINTI("ESTIMATOR %d", estimator);
   controllerInit(ControllerTypeAny);
   powerDistributionInit();
   sitAwInit();
