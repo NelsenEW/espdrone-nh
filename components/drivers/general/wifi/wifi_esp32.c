@@ -1,27 +1,4 @@
-#include <string.h>
-
-#include "config.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
-#include "esp_system.h"
-#include "esp_wifi.h"
-#include "esp_event.h"
-#include "esp_netif.h"
-#include "lwip/err.h"
-#include "lwip/sockets.h"
-#include "lwip/sys.h"
-#include <lwip/netdb.h>
-
-#include <esp_log.h>
-#include <nvs_flash.h>
-#include <sys/param.h>
-#include <esp_http_server.h>
-
-#include  "queuemonitor.h"
 #include "wifi_esp32.h"
-#include "camera_setup.h"
-#include "stm32_legacy.h"
 #define DEBUG_MODULE  "WIFI_UDP"
 #include "debug_cf.h"
 
@@ -29,11 +6,23 @@
 #define UDP_SERVER_BUFSIZE      128
 
 static struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
+static int s_retry_num = 0;
 
-//#define WIFI_SSID      "Udp Server"
-static char WIFI_SSID[32] = CONFIG_AP_SSID;
-static char WIFI_PWD[64] = CONFIG_AP_PWD;
-static char MAX_STA_CONN = CONFIG_MAX_STA_CONNECTION;
+
+static apsta_wifi_config_t apsta_wifi_config = {
+        .sta = {
+        .ssid = CONFIG_STA_SSID,//target ap ssid
+        .password = CONFIG_STA_PWD,//target ap password
+    },
+    .ap = {
+        .ssid = CONFIG_AP_SSID,
+        .password = CONFIG_AP_PWD,
+        .max_connection = CONFIG_MAX_STA_CONNECTION
+,
+        .authmode = WIFI_AUTH_WPA_WPA2_PSK,
+    },
+};
+
 
 static char rx_buffer[UDP_SERVER_BUFSIZE];
 static char tx_buffer[UDP_SERVER_BUFSIZE];
@@ -146,52 +135,64 @@ static httpd_uri_t uri_handler_jpg = {
 
 static httpd_handle_t start_webserver(void)
 {
-  httpd_handle_t server = NULL;
-  httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    httpd_handle_t server = NULL;
+    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
-  // Start the httpd server
-  DEBUG_PRINT_LOCAL("Starting HTTP stream server on port: '%d'", config.server_port);
-  if (httpd_start(&server, &config) == ESP_OK)
-  {
-    // Set URI handlers
-    DEBUG_PRINT_LOCAL("Registering URI handlers");
-    httpd_register_uri_handler(server, &uri_handler_jpg);
-    return server;
-  }
-  DEBUG_PRINT_LOCAL("Error starting server!");
-  return NULL;
+    // Start the httpd server
+    DEBUG_PRINT_LOCAL("Starting HTTP stream server on port: '%d'", config.server_port);
+    if (httpd_start(&server, &config) == ESP_OK)
+    {
+      // Set URI handlers
+      DEBUG_PRINT_LOCAL("Registering URI handlers");
+      httpd_register_uri_handler(server, &uri_handler_jpg);
+      return server;
+    }
+    DEBUG_PRINT_LOCAL("Error starting server!");
+    return NULL;
 }
 
 static void stop_webserver(httpd_handle_t server)
 {
-  // Stop the httpd server
-  httpd_stop(server);
+    // Stop the httpd server
+    httpd_stop(server);
 }
 
-static void wifi_event_handler(void *arg, esp_event_base_t event_base,
-                               int32_t event_id, void *event_data)
-{   
-    httpd_handle_t* server = (httpd_handle_t*) arg;
-    if (event_id == WIFI_EVENT_AP_STACONNECTED) {
-        wifi_event_ap_staconnected_t *event = (wifi_event_ap_staconnected_t *) event_data;
-        DEBUG_PRINT_LOCAL("station "MACSTR" join, AID=%d",
-                          MAC2STR(event->mac), event->aid);
+
+static void event_handler(void* arg, esp_event_base_t event_base,
+                                int32_t event_id, void* event_data)
+{
+    httpd_handle_t *server = (httpd_handle_t *)arg;
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START)
+    {
+        DEBUG_PRINT_LOCAL("Attempting to connect to ssid \"%s\"", CONFIG_STA_SSID);
+        esp_wifi_connect();
+    } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP){
+        ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        DEBUG_PRINT_LOCAL("got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        DEBUG_PRINT_LOCAL("Connected to ssid: \"%s\"", CONFIG_STA_SSID);
+        s_retry_num = 0;
+
         /* Start the web server */
-        if (*server == NULL) {
-            ESP_LOGI(TAG, "Starting webserver");
+        if (*server == NULL){
             *server = start_webserver();
         }
-    } else if (event_id == WIFI_EVENT_AP_STADISCONNECTED) {
-        wifi_event_ap_stadisconnected_t *event = (wifi_event_ap_stadisconnected_t *) event_data;
-        DEBUG_PRINT_LOCAL("station "MACSTR" leave, AID=%d",
-                          MAC2STR(event->mac), event->aid);
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED){
+  
+        DEBUG_PRINT_LOCAL("Disconnected from wifi %s", CONFIG_STA_SSID);
+        if (s_retry_num < CONFIG_STA_MAXIMUM_RETRY){
+            esp_wifi_connect();
+            s_retry_num++;
+            DEBUG_PRINT_LOCAL("Retry to connect to wifi");
+        } else{
+            DEBUG_PRINT_LOCAL("Failed to connect to SSID %s", CONFIG_STA_SSID);
+        }
+
         /* Stop the web server */
-        if (*server) {
-            ESP_LOGI(TAG, "Stopping webserver");
+        if (*server){
             stop_webserver(*server);
             *server = NULL;
-        }  
-    } 
+        }
+    }
 }
 
 bool wifiTest(void)
@@ -317,46 +318,71 @@ static void udp_server_tx_task(void *pvParameters)
 }
 
 
+// static void wifi_sta_got_ip_cb(void *arg, esp_event_base_t event_base,
+//                       int32_t event_id, void *event_data)
+// {
+//     ESP_LOGI(TAG, "Got IP event!");
+//     ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
+//     ESP_LOGI(TAG, "IPv4 address: " IPSTR, IP2STR(&event->ip_info.ip));
+// }
+
+static void wifi_ap_init()
+{
+    esp_netif_t *ap_netif = esp_netif_create_default_wifi_ap();
+    esp_netif_attach_wifi_ap(ap_netif);
+    esp_netif_ip_info_t ip_info = {
+        .ip.addr = ipaddr_addr("192.168.43.42"),
+        .netmask.addr = ipaddr_addr("255.255.255.0"),
+        .gw.addr      = ipaddr_addr("192.168.43.42"),
+    };
+    esp_netif_dhcps_stop(ap_netif);
+    esp_netif_set_ip_info(ap_netif, &ip_info);
+    esp_netif_dhcps_start(ap_netif);
+
+}
+
+static void wifi_sta_init()
+{
+    esp_netif_t *sta_if = esp_netif_create_default_wifi_sta();
+    esp_netif_attach_wifi_station(sta_if);
+} 
+
 void wifiInit(void)
 {
     static httpd_handle_t server = NULL;
     if (isInit) {
         return;
     }
-    esp_netif_t *ap_netif = NULL;
+
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
-    ap_netif = esp_netif_create_default_wifi_ap();
+    
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+    ESP_ERROR_CHECK(esp_event_handler_register( WIFI_EVENT,
+                                                ESP_EVENT_ANY_ID,
+                                                &event_handler,
+                                                &server));
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT,
+                                                IP_EVENT_STA_GOT_IP,
+                                                &event_handler,
+                                                &server));
 
-    wifi_config_t wifi_config;
-    memcpy(wifi_config.ap.ssid, WIFI_SSID, strlen(WIFI_SSID) + 1) ;
-    wifi_config.ap.ssid_len = strlen(WIFI_SSID);
-    memcpy(wifi_config.ap.password, WIFI_PWD, strlen(WIFI_PWD) + 1) ;
-    wifi_config.ap.max_connection = MAX_STA_CONN;
-    wifi_config.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK;
-    wifi_config.ap.channel  = 13;
+    // wifi_ap_init();
+    wifi_sta_init();
+    // esp_wifi_set_default_wifi_sta_handlers();
 
-    if (strlen(WIFI_PWD) == 0) {
-        wifi_config.ap.authmode = WIFI_AUTH_OPEN;
-    }
+    
+    esp_wifi_set_mode(WIFI_MODE_STA);
+    // esp_wifi_set_config(ESP_IF_WIFI_AP, (wifi_config_t*)&apsta_wifi_config.ap);
+    
+    esp_wifi_set_config(WIFI_IF_STA, (wifi_config_t*)&apsta_wifi_config.sta);
+    esp_wifi_start();
 
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config));
-    ESP_ERROR_CHECK(esp_wifi_start());
 
-    esp_netif_ip_info_t ip_info = {
-        .ip.addr = ipaddr_addr("192.168.43.42"),
-        .netmask.addr = ipaddr_addr("255.255.255.0"),
-        .gw.addr      = ipaddr_addr("192.168.43.42"),
-    };
-    ESP_ERROR_CHECK(esp_netif_dhcps_stop(ap_netif));
-    ESP_ERROR_CHECK(esp_netif_set_ip_info(ap_netif, &ip_info));
-    ESP_ERROR_CHECK(esp_netif_dhcps_start(ap_netif));
-
-    DEBUG_PRINT_LOCAL("wifi_init_softap complete.SSID:%s, password:%s", WIFI_SSID, WIFI_PWD);
+//Not yet
 
     // This should probably be reduced to a CRTP packet size
     udpDataRx = xQueueCreate(5, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
@@ -368,13 +394,8 @@ void wifiInit(void)
     } else {
         DEBUG_PRINT_LOCAL("UDP server create socket succeed!!!");
     } 
-    
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT,
-                ESP_EVENT_ANY_ID,
-                &wifi_event_handler,
-                &server));
 
-    server = start_webserver();
+    // server = start_webserver();
     // xTaskCreate(start_webserver, HTTP_STREAM_TASK_NAME, HTTP_STREAM_TASK_STACKSIZE, NULL, HTTP_STREAM_TASK_PRI, NULL);
     xTaskCreate(udp_server_tx_task, UDP_TX_TASK_NAME, UDP_TX_TASK_STACKSIZE, NULL, UDP_TX_TASK_PRI, NULL);
     xTaskCreate(udp_server_rx_task, UDP_RX_TASK_NAME, UDP_RX_TASK_STACKSIZE, NULL, UDP_RX_TASK_PRI, NULL);
