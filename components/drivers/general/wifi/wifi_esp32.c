@@ -137,6 +137,7 @@ static httpd_handle_t start_webserver(void)
 {
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.core_id = 0;
 
     // Start the httpd server
     DEBUG_PRINT_LOCAL("Starting HTTP stream server on port: '%d'", config.server_port);
@@ -220,11 +221,11 @@ bool wifiSendData(uint32_t size, uint8_t *data)
 };
 
 static esp_err_t udp_server_create(void *arg)
-{ 
+{   
     if (isUDPInit){
         return ESP_OK;
     }
-    
+
     struct sockaddr_in *pdest_addr = &dest_addr;
     pdest_addr->sin_addr.s_addr = htonl(INADDR_ANY);
     pdest_addr->sin_family = AF_INET;
@@ -279,8 +280,10 @@ static void udp_server_rx_task(void *pvParameters)
                 DEBUG_PRINT_LOCAL("udp packet cksum unmatched");
             }
 
-#ifdef DEBUG_UDP
-            DEBUG_PRINT_LOCAL("1.Received data size = %d  %02X \n cksum = %02X", len, inPacket.data[0], cksum);
+#ifdef DEBUG_UDP_RECEIVE
+            static char addr_str[128];
+            inet_ntoa_r(((struct sockaddr_in *)&source_addr)->sin_addr, addr_str, sizeof(addr_str) - 1);
+            DEBUG_PRINT_LOCAL("1.Received data size = %d  %02X \n cksum = %02X from %s", len, inPacket.data[0], cksum, addr_str);
             for (size_t i = 0; i < len; i++) {
                 DEBUG_PRINT_LOCAL(" data[%d] = %02X ", i, inPacket.data[i]);
             }
@@ -291,7 +294,6 @@ static void udp_server_rx_task(void *pvParameters)
 
 static void udp_server_tx_task(void *pvParameters)
 {
- 
     while (TRUE) {
         if(isUDPInit == false) {
             vTaskDelay(20);
@@ -301,14 +303,15 @@ static void udp_server_tx_task(void *pvParameters)
             memcpy(tx_buffer, outPacket.data, outPacket.size);       
             tx_buffer[outPacket.size] =  calculate_cksum(tx_buffer, outPacket.size);
             tx_buffer[outPacket.size + 1] = 0;
-
             int err = sendto(sock, tx_buffer, outPacket.size + 1, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
             if (err < 0) {
                 DEBUG_PRINT_LOCAL("Error occurred during sending: errno %d", errno);
                 continue;
             }
-#ifdef DEBUG_UDP
-            DEBUG_PRINT_LOCAL("Send data to");
+#ifdef DEBUG_UDP_SEND
+            static char addr_str[128];
+            inet_ntoa_r(((struct sockaddr_in *)&source_addr)->sin_addr, addr_str, sizeof(addr_str) - 1);
+            DEBUG_PRINT_LOCAL("Send data to %s, size %d", addr_str, outPacket.size);
             for (size_t i = 0; i < outPacket.size + 1; i++) {
                 DEBUG_PRINT_LOCAL(" data_send[%d] = %02X ", i, tx_buffer[i]);
             }
@@ -317,14 +320,6 @@ static void udp_server_tx_task(void *pvParameters)
     }
 }
 
-
-// static void wifi_sta_got_ip_cb(void *arg, esp_event_base_t event_base,
-//                       int32_t event_id, void *event_data)
-// {
-//     ESP_LOGI(TAG, "Got IP event!");
-//     ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
-//     ESP_LOGI(TAG, "IPv4 address: " IPSTR, IP2STR(&event->ip_info.ip));
-// }
 
 static void wifi_ap_init()
 {
@@ -370,19 +365,14 @@ void wifiInit(void)
                                                 &event_handler,
                                                 &server));
 
-    // wifi_ap_init();
+    wifi_ap_init();
     wifi_sta_init();
-    // esp_wifi_set_default_wifi_sta_handlers();
 
     
-    esp_wifi_set_mode(WIFI_MODE_STA);
-    // esp_wifi_set_config(ESP_IF_WIFI_AP, (wifi_config_t*)&apsta_wifi_config.ap);
-    
+    esp_wifi_set_mode(WIFI_MODE_APSTA);
+    esp_wifi_set_config(ESP_IF_WIFI_AP, (wifi_config_t*)&apsta_wifi_config.ap);
     esp_wifi_set_config(WIFI_IF_STA, (wifi_config_t*)&apsta_wifi_config.sta);
     esp_wifi_start();
-
-
-//Not yet
 
     // This should probably be reduced to a CRTP packet size
     udpDataRx = xQueueCreate(5, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
