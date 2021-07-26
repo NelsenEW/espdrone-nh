@@ -28,10 +28,10 @@ static camera_config_t camera_config = {
     .ledc_channel = LEDC_CHANNEL_0,
 
     .pixel_format = PIXFORMAT_JPEG, //YUV422,GRAYSCALE,RGB565,JPEG
-    .frame_size = FRAMESIZE_SVGA,   //QQVGA-UXGA Do not use sizes above QVGA when not JPEG
+    .frame_size = FRAMESIZE_VGA,   //QQVGA-UXGA Do not use sizes above QVGA when not JPEG
 
     .jpeg_quality = 12, //0-63 lower number means higher quality
-    .fb_count = 1       //if more than one, i2s runs in continuous mode. Use only with JPEG
+    .fb_count = 2       //if more than one, i2s runs in continuous mode. Use only with JPEG
 };
 
 //Initialize camera module
@@ -47,7 +47,6 @@ esp_err_t cameraInit()
   sensor_t * s = esp_camera_sensor_get();
   s->set_vflip(s, 1);
   s->set_hmirror(s, 1);
-  // s->set_framesize(s, FRAMESIZE_HD);
 
   isInit = true;
   return ESP_OK;
