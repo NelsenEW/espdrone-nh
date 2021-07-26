@@ -7,7 +7,7 @@
 
 static struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
 static int s_retry_num = 0;
-
+static bool ap_connected = false;
 
 static apsta_wifi_config_t apsta_wifi_config = {
         .sta = {
@@ -140,26 +140,27 @@ static httpd_handle_t start_webserver(void)
     config.core_id = 0;
 
     // Start the httpd server
-    DEBUG_PRINT_LOCAL("Starting HTTP stream server on port: '%d'", config.server_port);
+    ESP_LOGI(TAG, "Starting HTTP stream server on port: '%d'", config.server_port);
     if (httpd_start(&server, &config) == ESP_OK)
     {
       // Set URI handlers
-      DEBUG_PRINT_LOCAL("Registering URI handlers");
+      ESP_LOGI(TAG, "Registering URI handlers");
       httpd_register_uri_handler(server, &uri_handler_jpg);
       return server;
     }
-    DEBUG_PRINT_LOCAL("Error starting server!");
+    ESP_LOGI(TAG, "Error starting server!");
     return NULL;
 }
 
 static void stop_webserver(httpd_handle_t server)
 {
     // Stop the httpd server
+    ESP_LOGI(TAG, "Stop webserver");
     httpd_stop(server);
 }
 
 
-static void event_handler(void* arg, esp_event_base_t event_base,
+static void wifi_event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
 {
     httpd_handle_t *server = (httpd_handle_t *)arg;
@@ -172,14 +173,37 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         DEBUG_PRINT_LOCAL("got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         DEBUG_PRINT_LOCAL("Connected to ssid: \"%s\"", CONFIG_STA_SSID);
         s_retry_num = 0;
-
         /* Start the web server */
         if (*server == NULL){
             *server = start_webserver();
         }
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STACONNECTED){
+        /* Disconnect from the AP */
+        ap_connected = true;
+        esp_wifi_disconnect();
+        
+        /* Get the MAC and IP address of the new device */
+        wifi_event_ap_staconnected_t *event = (wifi_event_ap_staconnected_t *) event_data;
+        DEBUG_PRINT_LOCAL("station "MACSTR" join, AID=%d",
+                          MAC2STR(event->mac), event->aid);
+        
+        /* Start the web server */
+        if (*server == NULL){
+            *server = start_webserver();
+        }
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STADISCONNECTED){
+        /* Stop the web server */
+        if (*server){
+            stop_webserver(*server);
+            *server = NULL;
+        }
+        ap_connected = false;
+        esp_wifi_connect();
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED){
-  
         DEBUG_PRINT_LOCAL("Disconnected from wifi %s", CONFIG_STA_SSID);
+        /* Dont attempt to reconnect if another ap is connected */
+        if (ap_connected)
+            return;
         if (s_retry_num < CONFIG_STA_MAXIMUM_RETRY){
             esp_wifi_connect();
             s_retry_num++;
@@ -187,7 +211,6 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         } else{
             DEBUG_PRINT_LOCAL("Failed to connect to SSID %s", CONFIG_STA_SSID);
         }
-
         /* Stop the web server */
         if (*server){
             stop_webserver(*server);
@@ -355,14 +378,14 @@ void wifiInit(void)
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_FLASH));
     ESP_ERROR_CHECK(esp_event_handler_register( WIFI_EVENT,
                                                 ESP_EVENT_ANY_ID,
-                                                &event_handler,
+                                                &wifi_event_handler,
                                                 &server));
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT,
                                                 IP_EVENT_STA_GOT_IP,
-                                                &event_handler,
+                                                &wifi_event_handler,
                                                 &server));
 
     wifi_ap_init();

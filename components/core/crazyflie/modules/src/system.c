@@ -175,7 +175,7 @@ void systemTask(void *arg)
   //{
   //  platformSetLowInterferenceRadioMode();
   //}
-  soundInit();
+  // soundInit();
   memInit();
 
 #ifdef PROXIMITY_ENABLED
@@ -198,6 +198,8 @@ void systemTask(void *arg)
   pass &= estimatorKalmanTaskTest();
   DEBUG_PRINTI("estimatorKalmanTaskTest = %d ", pass);
   //pass &= soundTest();
+  pass &= cameraTest();
+  DEBUG_PRINTI("cameraTest = %d ", pass);
   pass &= memTest();
   DEBUG_PRINTI("memTest = %d ", pass);
   //pass &= watchdogNormalStartTest();
@@ -300,7 +302,7 @@ bool systemCanFly(void)
 
 PARAM_GROUP_START(system)
 PARAM_ADD(PARAM_INT8, selftestPassed, &selftestPassed)
-PARAM_GROUP_STOP(sytem)
+PARAM_GROUP_STOP(system)
 
 /* Loggable variables */
 LOG_GROUP_START(sys)

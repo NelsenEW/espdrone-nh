@@ -1,6 +1,7 @@
 #include "camera_setup.h"
+static bool isInit = false;
 
-static const char *TAG = "example:http_jpg";
+static const char *TAG = "camera_setup";
 /****************** Camera configuration *******************/
 static camera_config_t camera_config = {
     .pin_pwdn = CONFIG_PWDN,
@@ -45,6 +46,14 @@ esp_err_t cameraInit()
   }
   sensor_t * s = esp_camera_sensor_get();
   s->set_vflip(s, 1);
+  s->set_hmirror(s, 1);
+  // s->set_framesize(s, FRAMESIZE_HD);
 
+  isInit = true;
   return ESP_OK;
 }
+
+bool cameraTest(void)
+{
+    return isInit;
+};

@@ -27,4 +27,5 @@
 #endif
 
 esp_err_t cameraInit();
+bool cameraTest();
 #endif
