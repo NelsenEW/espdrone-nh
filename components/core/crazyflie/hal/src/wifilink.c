@@ -36,6 +36,7 @@
 #include "pm_esplane.h"
 #include "queuemonitor.h"
 #include "wifi_esp32.h"
+#include "udp.h"
 #include "stm32_legacy.h"
 
 #define DEBUG_MODULE "WIFILINK"
@@ -58,9 +59,6 @@ static int wifilinkSetEnable(bool enable);
 static int wifilinkReceiveCRTPPacket(CRTPPacket *p);
 
 STATIC_MEM_TASK_ALLOC(wifilinkTask, USBLINK_TASK_STACKSIZE);
-
-static float rch, pch, ych;
-static uint16_t tch;
 
 static bool wifilinkIsConnected(void)
 {
@@ -90,7 +88,7 @@ static void wifilinkTask(void *param)
 {
     while (1) {
         /* command step - receive  03 Fetch a wifi packet off the queue */
-        wifiGetDataBlocking(&wifiIn);
+        udpGetDataBlocking(&wifiIn);
         lastPacketTick = xTaskGetTickCount();
 #ifdef CONFIG_ENABLE_LEGACY_APP
 
@@ -148,7 +146,7 @@ static int wifilinkSendPacket(CRTPPacket *p)
 
     /*ledseqRun(LINK_DOWN_LED, seq_linkup);*/
 
-    return wifiSendData(dataSize, sendBuffer);
+    return udpSendData(dataSize, sendBuffer);
 }
 
 static int wifilinkSetEnable(bool enable)

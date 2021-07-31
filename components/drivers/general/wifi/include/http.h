@@ -1,10 +1,10 @@
-#ifndef WIFI_ESP32_H_
-#define WIFI_ESP32_H_
+#ifndef HTTP_H_
+#define HTTP_H_
+#include "debug_cf.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include "http.h"
-#include "udp.h"
 #include "config.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -30,26 +30,16 @@
 
 #include "camera_setup.h"
 #include "stm32_legacy.h"
-
-
-typedef struct {
-    wifi_sta_config_t sta;
-    wifi_ap_config_t ap;
-} apsta_wifi_config_t;
+/**
+ * @brief start the webserver
+ * 
+ */
+void start_webserver();
 
 /**
- * Initialize the wifi.
- *
- * @note Initialize CRTP link only if USE_CRTP_WIFI is defined
+ * @brief stop the webserver
+ * 
  */
-void wifiInit(void);
+void stop_webserver();
 
-/**
- * Test the WIFI status.
- *
- * @return true if the WIFI is initialized
- */
-bool wifiTest(void);
-
-
-#endif
+#endif 
