@@ -69,7 +69,7 @@ static httpd_handle_t server = NULL;
         int64_t frame_time = fr_end - last_frame;
         last_frame = fr_end;
         frame_time /= 1000;
-        ESP_LOGI(TAG, "MJPG: %uKB %ums (%.1ffps)",
+        ESP_LOGD(TAG, "MJPG: %uKB %ums (%.1ffps)",
             (uint32_t)(_jpg_buf_len/1024),
             (uint32_t)frame_time, 1000.0 / (uint32_t)frame_time);
     }
@@ -104,7 +104,7 @@ void start_webserver(void)
 
 }
 
-void stop_webserver(httpd_handle_t server)
+void stop_webserver(void)
 {
     if (server){
         // Stop the httpd server

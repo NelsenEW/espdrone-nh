@@ -1,6 +1,5 @@
 #ifndef HTTP_H_
 #define HTTP_H_
-#include "debug_cf.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -29,7 +28,6 @@
 #include  "queuemonitor.h"
 
 #include "camera_setup.h"
-#include "stm32_legacy.h"
 /**
  * @brief start the webserver
  * 

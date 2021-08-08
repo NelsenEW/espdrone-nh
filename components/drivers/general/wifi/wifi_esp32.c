@@ -48,21 +48,25 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         /* Start the web server */
         start_webserver();
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STADISCONNECTED){
-        /* Stop the web server */
-        stop_webserver();
+        wifi_event_ap_stadisconnected_t *event = (wifi_event_ap_stadisconnected_t *) event_data;
+        DEBUG_PRINT_LOCAL("station "MACSTR" disconnected, AID=%d", 
+                            MAC2STR(event->mac), event->aid);
+        
         ap_connected = false;
         esp_wifi_connect();
+        
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED){
-        DEBUG_PRINT_LOCAL("Disconnected from wifi %s", CONFIG_STA_SSID);
-        /* Dont attempt to reconnect if another ap is connected */
-        if (ap_connected)
+        DEBUG_PRINT_LOCAL("Disconnected from wifi AP %s", CONFIG_STA_SSID);
+        if (ap_connected){
             return;
+        } 
         if (s_retry_num < CONFIG_STA_MAXIMUM_RETRY){
             esp_wifi_connect();
             s_retry_num++;
             DEBUG_PRINT_LOCAL("Retry to connect to wifi");
         } else{
             DEBUG_PRINT_LOCAL("Failed to connect to SSID %s", CONFIG_STA_SSID);
+            stop_webserver();
         }
     }
 }
@@ -74,7 +78,8 @@ bool wifiTest(void)
 
 
 static void wifi_ap_init()
-{
+{   
+
     esp_netif_t *ap_netif = esp_netif_create_default_wifi_ap();
     esp_netif_attach_wifi_ap(ap_netif);
     esp_netif_ip_info_t ip_info = {
@@ -99,7 +104,6 @@ void wifiInit(void)
     if (isInit) {
         return;
     }
-
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     

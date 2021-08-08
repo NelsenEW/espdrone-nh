@@ -187,7 +187,7 @@
 #define CRTP_TX_TASK_STACKSIZE        (2 * configBASE_STACK_SIZE)
 #define CRTP_RX_TASK_STACKSIZE        (2 * configBASE_STACK_SIZE)
 #define CRTP_RXTX_TASK_STACKSIZE      (1 * configBASE_STACK_SIZE)
-#define LOG_TASK_STACKSIZE            (3 * configBASE_STACK_SIZE)
+#define LOG_TASK_STACKSIZE            (5 * configBASE_STACK_SIZE)
 #define MEM_TASK_STACKSIZE            (2 * configBASE_STACK_SIZE)
 #define PARAM_TASK_STACKSIZE          (2 * configBASE_STACK_SIZE)
 #define SENSORS_TASK_STACKSIZE        (3 * configBASE_STACK_SIZE)
