@@ -88,7 +88,7 @@ static void systemTask(void *arg);
 /* Public functions */
 void systemLaunch(void)
 {
-  STATIC_MEM_TASK_CREATE(systemTask, systemTask, SYSTEM_TASK_NAME, NULL, SYSTEM_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(systemTask, systemTask, SYSTEM_TASK_NAME, NULL, SYSTEM_TASK_PRI);
 }
 
 // This must be the first module to be initialized!

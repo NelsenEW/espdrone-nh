@@ -1,17 +1,18 @@
 
-## ESP-Drone-NH
 
 Forked from [ESP-Drone](https://github.com/espressif/esp-drone)
 
-### Introduction
+# ESPDrone-NH
 
-**ESP-Drone** is an open source solution based on Espressif ESP32/ESP32-S2 Wi-Fi chip, which can be controlled by a mobile APP or gamepad over **Wi-Fi** connection. ESP-Drone comes with **simple hardware**, **clear and extensible code architecture**, and therefore this project can be used in **STEAM education** and other fields. The main code is ported from **Crazyflie** open source project with **GPL3.0** protocol.
+## Introduction
 
-![ESP-Drone](./docs/_static/espdrone_s2_v1_2_2.png)
+**ESP-Drone** is an open source solution based on Espressif ESP32 Wi-Fi chip, which can be controlled by a mobile APP or gamepad over **Wi-Fi** connection. ESP-Drone comes with **simple hardware**, **clear and extensible code architecture**, and therefore this project can be used in **STEAM education** and other fields. The main code is ported from **Crazyflie** open source project with **GPL3.0** protocol.
+
+<img src=./docs/_static/espdrone_nh.png alt="ESP-Drone" width=250 height=250>
 
 For more information, please check the sections below:
-* **Getting Started**: [Getting Started](https://docs.espressif.com/projects/espressif-esp-drone/zh_CN/latest/gettingstarted.html)
-* **Hardware Schematic**：[Hardware](https://docs.espressif.com/projects/espressif-esp-drone/zh_CN/latest/_static/ESP32_S2_Drone_V1_2/SCH_Mainboard_ESP32_S2_Drone_V1_2.pdf)
+* **Getting Started**: [Getting Started](https://docs.espressif.com/projects/espressif-esp-drone/en/latest/gettingstarted.html)
+* **Hardware Schematic**：[Hardware](docs/nh/Schematic_espdrone_nh_1.2.pdf)
 * **iOS APP Source code**: [ESP-Drone-iOS](https://github.com/EspressifApps/ESP-Drone-iOS)
 * **Android APP Source code**: [ESP-Drone-Android](https://github.com/EspressifApps/ESP-Drone-Android)
 
@@ -22,13 +23,7 @@ For more information, please check the sections below:
 3. Position-hold Mode
 4. APP Control
 5. CFclient Supported
-6. [Camera streaming with httpd server](docs\en\md\http_stream.md)
-
-If you already have cloned the repo without the --recursive option, you need to get the submodules manually
-```bash
-cd EEE-DIP-UAVONICS
-git submodule update --init
-```
+6. [Camera streaming with httpd server](docs/nh/http_stream.md)
 
 ### Third Party Copyrighted Code
 

@@ -88,7 +88,7 @@ void extRxInit(void)
   uart1Init();
 #endif
 
-  STATIC_MEM_TASK_CREATE(extRxTask, extRxTask, EXTRX_TASK_NAME, NULL, EXTRX_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(extRxTask, extRxTask, EXTRX_TASK_NAME, NULL, EXTRX_TASK_PRI);
 }
 
 static void extRxTask(void *param)

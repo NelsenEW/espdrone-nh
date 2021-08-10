@@ -395,7 +395,7 @@ static void sensorsTaskInit(void)
   magPrimDataQueue = STATIC_MEM_QUEUE_CREATE(magPrimDataQueue);
   baroPrimDataQueue = STATIC_MEM_QUEUE_CREATE(baroPrimDataQueue);
 
-  STATIC_MEM_TASK_CREATE(sensorsTask, sensorsTask, SENSORS_TASK_NAME, NULL, SENSORS_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(sensorsTask, sensorsTask, SENSORS_TASK_NAME, NULL, SENSORS_TASK_PRI);
 }
 
 static void sensorsGyroGet(Axis3i16* dataOut, uint8_t device) {

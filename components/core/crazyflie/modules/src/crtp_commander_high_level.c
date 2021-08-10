@@ -220,7 +220,7 @@ void crtpCommanderHighLevelInit(void)
   plan_init(&planner);
 
   //Start the trajectory task
-  STATIC_MEM_TASK_CREATE(crtpCommanderHighLevelTask, crtpCommanderHighLevelTask, CMD_HIGH_LEVEL_TASK_NAME, NULL, CMD_HIGH_LEVEL_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(crtpCommanderHighLevelTask, crtpCommanderHighLevelTask, CMD_HIGH_LEVEL_TASK_NAME, NULL, CMD_HIGH_LEVEL_TASK_PRI);
 
   lockTraj = xSemaphoreCreateMutexStatic(&lockTrajBuffer);
 
@@ -430,7 +430,7 @@ int stop(const struct data_stop* data)
 }
 
 int go_to(const struct data_go_to* data)
-{
+{ 
   static struct traj_eval ev = {
     // pos, vel, yaw will be filled before using
     .acc = {0.0f, 0.0f, 0.0f},

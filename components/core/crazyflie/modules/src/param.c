@@ -152,7 +152,7 @@ void paramInit(void)
 
 
   //Start the param task
-  STATIC_MEM_TASK_CREATE(paramTask, paramTask, PARAM_TASK_NAME, NULL, PARAM_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(paramTask, paramTask, PARAM_TASK_NAME, NULL, PARAM_TASK_PRI);
 
   //TODO: Handle stored parameters!
 
