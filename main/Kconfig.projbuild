@@ -52,6 +52,25 @@ menu "ESPDrone Config"
                 This enables assit mode when use old version app.
     endmenu
     
+    menu "STA Configuration"
+        config STA_SSID
+            string "STA SSID"
+            default "********"
+            help
+                STA SSID, maximum 32 characters
+        config STA_PWD
+            string  "STA PASSWORD"
+            default "********"
+            help
+                STA Password, maximum 32 characters
+        config STA_MAXIMUM_RETRY
+            int "sta maximum retry"
+            range 0 5
+            default 3
+            help
+                Maximum number of attempt to connect before giving up
+    endmenu
+    
     menu "AP Configuration"
         config AP_SSID
             string "AP SSID"
@@ -62,7 +81,7 @@ menu "ESPDrone Config"
             string  "AP PASSWORD"
             default "12345678"
             help
-                AP Password of ESP drone, maximum 32 characters
+                AP Password of ESP drone, maximum 64 characters
         config MAX_STA_CONNECTION
             int "MAX STA CONNECTION"
             default 2

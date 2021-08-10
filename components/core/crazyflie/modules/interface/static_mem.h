@@ -96,9 +96,9 @@
 /**
  * @brief Creation of tasks using static memory.
  *
- * STATIC_MEM_TASK_ALLOC() and STATIC_MEM_TASK_CREATE() are used together to
+ * STATIC_MEM_TASK_ALLOC() and STATIC_MEM_TASK_CREATE_CORE_1() are used together to
  * allocate buffers and create a task. STATIC_MEM_TASK_ALLOC() defines the
- * required memory and variables while STATIC_MEM_TASK_CREATE() creats
+ * required memory and variables while STATIC_MEM_TASK_CREATE_CORE_1() creats
  * the task. The NAME is used as a base name for the necessary variables and
  * does not have to be the same as FUNCTION or TASK_NAME, but that works as well.
  *
@@ -111,7 +111,7 @@
  * }
  *
  * void init() {
- *  taskHandle = STATIC_MEM_TASK_CREATE(myTask, taskFcn, "MY_TASK", NULL, 1);
+ *  taskHandle = STATIC_MEM_TASK_CREATE_CORE_1(myTask, taskFcn, "MY_TASK", NULL, 1);
  *  // ...
  * }
  */
@@ -139,4 +139,6 @@
  * @param PARAMETERS Passed on as argument to the function implementing the task
  * @param PRIORITY The task priority
  */
-#define STATIC_MEM_TASK_CREATE(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY) xTaskCreateStaticPinnedToCore((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer, 1)
+#define STATIC_MEM_TASK_CREATE(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY) xTaskCreateStatic((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer)
+#define STATIC_MEM_TASK_CREATE_CORE(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY, CORE) xTaskCreateStaticPinnedToCore((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer, CORE)
+#define STATIC_MEM_TASK_CREATE_CORE_1(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY) xTaskCreateStaticPinnedToCore((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer, 1)

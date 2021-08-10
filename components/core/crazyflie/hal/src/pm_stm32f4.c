@@ -103,7 +103,7 @@ void pmInit(void)
     return;
   }
 
-  STATIC_MEM_TASK_CREATE(pmTask, pmTask, PM_TASK_NAME, NULL, PM_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(pmTask, pmTask, PM_TASK_NAME, NULL, PM_TASK_PRI);
 
   isInit = true;
 

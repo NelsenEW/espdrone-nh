@@ -70,7 +70,7 @@ void infoTask(void *param);
 
 void infoInit()
 {
-  STATIC_MEM_TASK_CREATE(infoTask, infoTask, INFO_TASK_NAME, NULL, INFO_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(infoTask, infoTask, INFO_TASK_NAME, NULL, INFO_TASK_PRI);
   crtpInitTaskQueue(crtpInfo);
 }
 

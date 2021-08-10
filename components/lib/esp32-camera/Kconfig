@@ -2,7 +2,7 @@ menu "Camera configuration"
 
     config OV7670_SUPPORT
         bool "Support OV7670 VGA"
-        default y
+        default n
         help
             Enable this option if you want to use the OV7670.
             Disable this option to safe memory.
@@ -16,7 +16,7 @@ menu "Camera configuration"
 
     config NT99141_SUPPORT
         bool "Support NT99141 HD"
-        default y
+        default n
         help
             Enable this option if you want to use the NT99141.
             Disable this option to save memory.
@@ -30,14 +30,14 @@ menu "Camera configuration"
 
     config OV3660_SUPPORT
         bool "Support OV3660 3MP"
-        default y
+        default n
         help
             Enable this option if you want to use the OV3360.
             Disable this option to save memory.
 
     config OV5640_SUPPORT
         bool "Support OV5640 5MP"
-        default y
+        default n
         help
             Enable this option if you want to use the OV5640.
             Disable this option to save memory.

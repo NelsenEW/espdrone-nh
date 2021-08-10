@@ -120,11 +120,11 @@ void syslinkInit()
 
   vSemaphoreCreateBinary(syslinkAccess);
 
-  STATIC_MEM_TASK_CREATE(syslinkTask, syslinkTask, SYSLINK_TASK_NAME, NULL, SYSLINK_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(syslinkTask, syslinkTask, SYSLINK_TASK_NAME, NULL, SYSLINK_TASK_PRI);
 
   #ifdef UART2_LINK_COMM
   uart2Init(512000);
-  STATIC_MEM_TASK_CREATE(uart2Task, uart2Task, UART2_TASK_NAME, NULL, UART2_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(uart2Task, uart2Task, UART2_TASK_NAME, NULL, UART2_TASK_PRI);
   #endif
 
   isInit = true;

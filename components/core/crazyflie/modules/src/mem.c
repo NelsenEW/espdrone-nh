@@ -167,7 +167,7 @@ void memInit(void)
 //  }
 
   //Start the mem task
-  STATIC_MEM_TASK_CREATE(memTask, memTask, MEM_TASK_NAME, NULL, MEM_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(memTask, memTask, MEM_TASK_NAME, NULL, MEM_TASK_PRI);
 }
 
 bool memTest(void) {

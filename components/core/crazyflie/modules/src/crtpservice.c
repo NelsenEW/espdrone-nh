@@ -69,7 +69,7 @@ void crtpserviceHandler(CRTPPacket *p)
     case linkSource:
       p->size = CRTP_MAX_DATA_SIZE;
       bzero(p->data, CRTP_MAX_DATA_SIZE);
-      strcpy((char*)p->data, "Bitcraze Crazyflie");
+      strcpy((char*)p->data, "Edlab Espdrone");
       crtpSendPacket(p);
       break;
     case linkSink:

@@ -302,7 +302,7 @@ void estimatorKalmanTaskInit() {
 
   dataMutex = xSemaphoreCreateMutexStatic(&dataMutexBuffer);
 
-  STATIC_MEM_TASK_CREATE(kalmanTask, kalmanTask, KALMAN_TASK_NAME, NULL, KALMAN_TASK_PRI);
+  STATIC_MEM_TASK_CREATE_CORE_1(kalmanTask, kalmanTask, KALMAN_TASK_NAME, NULL, KALMAN_TASK_PRI);
 
   isInit = true;
 }

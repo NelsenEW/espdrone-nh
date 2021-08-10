@@ -55,7 +55,7 @@ void __attribute__((weak)) appInit()
     return;
   }
 
-  STATIC_MEM_TASK_CREATE(appTask, appTask, "app", NULL, APP_PRIORITY);
+  STATIC_MEM_TASK_CREATE_CORE_1(appTask, appTask, "app", NULL, APP_PRIORITY);
   isInit = true;
 }
 

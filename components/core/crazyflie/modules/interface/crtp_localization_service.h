@@ -60,6 +60,7 @@ typedef enum
   COMM_GNSS_PROPRIETARY    = 7,
   EXT_POSE                 = 8,
   EXT_POSE_PACKED          = 9,
+  EMERGENCY_RESET        = 10, 
 } locsrv_t;
 
 // Set up the callback for the CRTP_PORT_LOCALIZATION

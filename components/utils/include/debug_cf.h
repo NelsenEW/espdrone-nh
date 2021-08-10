@@ -25,7 +25,7 @@
 #include "config.h"
 #include "console.h"
 //if enable, some message will print to remote client 
-//#define DEBUG_PRINT_ON_CONSOLE
+#define DEBUG_PRINT_ON_CONSOLE
 #ifdef DEBUG_PRINT_ON_UART
   #include "uart1.h"
   #define uartPrintf uart1Printf

@@ -92,9 +92,8 @@ bool consoleTest(void)
 
 int consolePutchar(int ch)
 {
-  //TODO: test if have interrupt
-  bool isInInterrupt = false;
-  //bool isInInterrupt = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
+  
+  bool isInInterrupt = xPortInIsrContext();
 
   if (!isInit) {
     return 0;

@@ -165,6 +165,8 @@ static void genericLocHandle(CRTPPacket* pk)
     crtpSendPacket(pk);
   } else if (type == EMERGENCY_STOP) {
     stabilizerSetEmergencyStop();
+  } else if (type == EMERGENCY_RESET) {
+    stabilizerResetEmergencyStop();
   } else if (type == EMERGENCY_STOP_WATCHDOG) {
     stabilizerSetEmergencyStopTimeout(DEFAULT_EMERGENCY_STOP_TIMEOUT);
   } else if (type == EXT_POSE) {
