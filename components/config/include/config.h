@@ -197,7 +197,7 @@
 #define SYSLINK_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
 #define USBLINK_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
 #define WIFILINK_TASK_STACKSIZE       (5 * configBASE_STACK_SIZE)
-#define UDP_TX_TASK_STACKSIZE         (2 * configBASE_STACK_SIZE)
+#define UDP_TX_TASK_STACKSIZE         (4 * configBASE_STACK_SIZE)
 #define UDP_RX_TASK_STACKSIZE         (2 * configBASE_STACK_SIZE)
 #define UDP_RX2_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
 #define PROXIMITY_TASK_STACKSIZE      (1 * configBASE_STACK_SIZE)

@@ -69,7 +69,7 @@ static httpd_handle_t server = NULL;
         int64_t frame_time = fr_end - last_frame;
         last_frame = fr_end;
         frame_time /= 1000;
-        ESP_LOGD(TAG, "MJPG: %uKB %ums (%.1ffps)",
+        DEBUG_PRINTD("MJPG: %uKB %ums (%.1ffps)",
             (uint32_t)(_jpg_buf_len/1024),
             (uint32_t)frame_time, 1000.0 / (uint32_t)frame_time);
     }
@@ -92,14 +92,16 @@ void start_webserver(void)
         config.core_id = 0;
 
         // Start the httpd server
-        ESP_LOGI(TAG, "Starting HTTP stream server on port: '%d'", config.server_port);
+        DEBUG_PRINTI("Starting HTTP stream server on port: '%d'", config.server_port);
         if (httpd_start(&server, &config) == ESP_OK)
         {
-        // Set URI handlers
-        ESP_LOGI(TAG, "Registering URI handlers");
-        httpd_register_uri_handler(server, &uri_handler_jpg);
+            // Set URI handlers
+            DEBUG_PRINTI("Registering URI handlers");
+            httpd_register_uri_handler(server, &uri_handler_jpg);
         }
-        ESP_LOGI(TAG, "Error starting server!");
+        else{
+            DEBUG_PRINTE("Error starting server!");
+        }
     }
 
 }
@@ -108,7 +110,7 @@ void stop_webserver(void)
 {
     if (server){
         // Stop the httpd server
-        ESP_LOGI(TAG, "Stop webserver");
+        DEBUG_PRINTI("Stop webserver");
         httpd_stop(server);
     }
 }

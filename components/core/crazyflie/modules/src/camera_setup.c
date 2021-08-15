@@ -47,7 +47,13 @@ esp_err_t cameraInit()
   sensor_t * s = esp_camera_sensor_get();
   s->set_vflip(s, 1);
   s->set_hmirror(s, 1);
-
+  s->set_exposure_ctrl(s, 0);
+  s->set_gain_ctrl(s, 0);
+  s->set_aec_value(s, 75);
+  s->set_agc_gain(s, 4);
+  s->set_contrast(s, 1);
+  s->set_aec2(s, 0);
+  s->set_ae_level(s, -2);
   isInit = true;
   return ESP_OK;
 }
