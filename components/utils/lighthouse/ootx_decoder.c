@@ -5,7 +5,7 @@
  * +------+    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
  *  ||  ||    /_____/_/\__/\___/_/   \__,_/ /___/\___/
  *
- * Crazyflie control firmware
+ * Espdrone control firmware
  *
  * Copyright (C) 2018 Bitcraze AB
  *
@@ -34,7 +34,7 @@
 
 #include "ootx_decoder.h"
 
-// #include "debug_cf.h"
+// #include "debug_ed.h"
 
 uint16_t betole(uint16_t value)
 {

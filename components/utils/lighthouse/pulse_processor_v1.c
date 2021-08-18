@@ -5,7 +5,7 @@
  * | / ,--´  |    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
  *    +------`   /_____/_/\__/\___/_/   \__,_/ /___/\___/
  *
- * Crazyflie control firmware
+ * Espdrone control firmware
  *
  * Copyright (C) 2019 - 2020 Bitcraze AB
  *
@@ -271,7 +271,7 @@ TESTABLE_STATIC bool isNewSync(uint32_t timestamp, uint32_t lastSync) {
 }
 
 #ifndef UNIT_TEST_MODE
-#include "debug_cf.h"
+#include "debug_ed.h"
 #else
 #include <stdio.h>
 #define DEBUG_PRINT printf

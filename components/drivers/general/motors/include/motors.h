@@ -193,7 +193,7 @@ void motorsTestTask(void *params);
  * This function will set all motors into a "beep"-mode,
  * each of the motor will turned on with a given ratio and frequency.
  * The higher the ratio the higher the given power to the motors.
- * ATTENTION: To much ratio can push your crazyflie into the air and hurt you!
+ * ATTENTION: To much ratio can push your espdrone into the air and hurt you!
  * Example:
  *     motorsBeep(true, 1000, (uint16_t)(72000000L / frequency)/ 20);
  *     motorsBeep(false, 0, 0); *

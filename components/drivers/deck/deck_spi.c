@@ -25,10 +25,10 @@
 
 #include "deck_spi.h"
 #include "config.h"
-#include "cfassert.h"
+#include "edassert.h"
 #include "nvicconf.h"
 #define DEBUG_MODULE "DECK_SPI"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #ifdef CONFIG_EXT_FLOW_TESTBOARD //This board use wrong pin definition,only for test.
     #define SPI_SCK_PIN CONFIG_SPI_PIN_MOSI

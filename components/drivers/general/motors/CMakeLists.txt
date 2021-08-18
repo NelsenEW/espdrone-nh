@@ -1,3 +1,3 @@
-idf_component_register(SRCS "motors_def_cf2.c" "motors.c"
+idf_component_register(SRCS "motors_def_ed2.c" "motors.c"
                        INCLUDE_DIRS "." "include"
-                        REQUIRES crazyflie utils platform config)
+                        REQUIRES espdrone utils platform config)

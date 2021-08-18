@@ -5,7 +5,7 @@
  * +------+    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
  *  ||  ||    /_____/_/\__/\___/_/   \__,_/ /___/\___/
  *
- * Crazyflie firmware.
+ * Espdrone firmware.
  *
  * Copyright 2018, Bitcraze AB
  *
@@ -31,7 +31,7 @@ Data storage encapsulation for the TDoA engine
 #include <string.h>
 
 #define DEBUG_MODULE "TDOA_STORAGE"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #include "tdoaStorage.h"
 

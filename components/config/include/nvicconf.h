@@ -30,7 +30,7 @@
 #define NVIC_CONF_H_
 
 /*
- Interrupt priority organisation in Crazyflie:
+ Interrupt priority organisation in Espdrone:
 
  In Cortex-M low priority number is higher priority. Hence priority 0 is the
  highest priority interrupt and priority 15 the lowest (STM32 implements
@@ -73,13 +73,13 @@
 #define NVIC_VERY_HIGH_PRI 7
 
 
-// Priorities used for Crazyflie
+// Priorities used for Espdrone
 #define NVIC_I2C_HIGH_PRI    3
 #define NVIC_I2C_LOW_PRI      4
 #define NVIC_TRACE_TIM_PRI    4
 #define NVIC_UART_PRI         6
 
-// Priorities for Crazyflie 2.0
+// Priorities for Espdrone 2.0
 #define NVIC_RADIO_PRI        11
 #define NVIC_ADC_PRI          12
 #define NVIC_CPPM_PRI         14

@@ -42,7 +42,7 @@
 #include "i2c_drv.h"
 #include "config.h"
 #define DEBUG_MODULE "I2CDRV"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 // Definitions of sensors I2C bus
 #define I2C_DEFAULT_SENSORS_CLOCK_SPEED             400000

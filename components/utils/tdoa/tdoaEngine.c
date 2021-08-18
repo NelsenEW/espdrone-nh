@@ -5,7 +5,7 @@
  * +------+    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
  *  ||  ||    /_____/_/\__/\___/_/   \__,_/ /___/\___/
  *
- * Crazyflie firmware.
+ * Espdrone firmware.
  *
  * Copyright 2018, Bitcraze AB
  *
@@ -46,7 +46,7 @@ The implementation must handle
 #include <string.h>
 
 #define DEBUG_MODULE "TDOA_ENGINE"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #include "tdoaEngine.h"
 #include "tdoaStats.h"

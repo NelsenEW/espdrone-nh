@@ -27,7 +27,7 @@
 #include <string.h>
 
 #include "config.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 #include "i2cdev.h"
 #include "configblock.h"
 #include "eeprom.h"

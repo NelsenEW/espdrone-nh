@@ -1,5 +1,5 @@
 #include "udp.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #define DEBUG_MODULE  "UDP"
 

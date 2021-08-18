@@ -30,7 +30,7 @@
 
 #include "ms5611.h"
 #include "i2cdev.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 #include "eprintf.h"
 
 #include "math.h"

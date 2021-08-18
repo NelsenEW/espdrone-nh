@@ -1,6 +1,6 @@
 #include "wifi_esp32.h"
 #define DEBUG_MODULE  "WIFI"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 static int s_retry_num = 0;
 static bool ap_connected = false;

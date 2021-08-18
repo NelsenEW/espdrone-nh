@@ -24,7 +24,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #include "i2cdev.h"
 #include "vl53l0x.h"

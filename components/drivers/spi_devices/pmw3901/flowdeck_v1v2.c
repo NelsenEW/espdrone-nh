@@ -32,9 +32,9 @@
 #include "config.h"
 #include "stabilizer_types.h"
 #include "estimator.h"
-#include "cf_math.h"
+#include "ed_math.h"
 #define DEBUG_MODULE "FLOW"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #define AVERAGE_HISTORY_LENGTH 4
 #define OULIER_LIMIT 100

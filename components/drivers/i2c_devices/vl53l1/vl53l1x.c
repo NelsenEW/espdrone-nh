@@ -28,7 +28,7 @@
 
 /**
  * @file   vl53l1_platform.c
- * @brief  Code function definitions for Crazyflie
+ * @brief  Code function definitions for Espdrone
  *
  */
 #include <stdio.h>      // sprintf(), vsnprintf(), printf()
@@ -41,7 +41,7 @@
 #include "i2cdev.h"
 #include "vl53l1x.h"
 #define DEBUG_MODULE "VLX1"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 #ifdef PAL_EXTENDED
 	#include "vl53l1_register_strings.h"

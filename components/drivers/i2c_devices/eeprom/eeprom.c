@@ -30,7 +30,7 @@
 #include "freertos/task.h"
 
 #include "eeprom.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 #include "eprintf.h"
 
 

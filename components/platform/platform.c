@@ -25,7 +25,7 @@
 
 #include "platform.h"
 #define DEBUG_MODULE "PLATFORM"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 static const platformConfig_t *active_config = 0;
 

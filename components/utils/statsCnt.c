@@ -27,7 +27,7 @@
  */
 
 #include "statsCnt.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 
 void statsCntRateCounterInit(statsCntRateCounter_t* counter, uint32_t averagingIntervalMs) {
