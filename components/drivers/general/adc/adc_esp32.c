@@ -29,7 +29,7 @@
 #include "pm_esplane.h"
 #include "stm32_legacy.h"
 #define DEBUG_MODULE "ADC"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 static bool isInit;
 

@@ -5,7 +5,7 @@
  * +------+    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
  *  ||  ||    /_____/_/\__/\___/_/   \__,_/ /___/\___/
  *
- * Crazyflie control firmware
+ * Espdrone control firmware
  *
  * Code addapted from ashtuchkin's Vive DIY position sensor
  * see https://github.com/ashtuchkin/vive-diy-position-sensor/
@@ -156,14 +156,14 @@ bool lighthouseGeometryIntersectionPlaneVector(const vec3d linePoint, const vec3
     return true;
 }
 
-void lighthouseGeometryGetSensorPosition(const vec3d cfPos, const arm_matrix_instance_f32 *R, vec3d sensorPosition, vec3d pos) {
+void lighthouseGeometryGetSensorPosition(const vec3d edPos, const arm_matrix_instance_f32 *R, vec3d sensorPosition, vec3d pos) {
   arm_matrix_instance_f32 LOCAL_POS = {3, 1, sensorPosition};
 
   vec3d rotatedPos = {0};
   arm_matrix_instance_f32 ROTATED_POS = {1, 3, rotatedPos};
   arm_mat_mult_f32(R, &LOCAL_POS, &ROTATED_POS);
 
-  vec_add(cfPos, rotatedPos, pos);
+  vec_add(edPos, rotatedPos, pos);
 }
 
 bool lighthouseGeometryYawDelta(const vec3d ipv, const vec3d spv, const vec3d n, float* yawDelta) {

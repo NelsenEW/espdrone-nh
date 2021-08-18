@@ -6,12 +6,12 @@ Forked from [ESP-Drone](https://github.com/espressif/esp-drone)
 
 ## Introduction
 
-**ESP-Drone** is an open source solution based on Espressif ESP32 Wi-Fi chip, which can be controlled by a mobile APP or gamepad over **Wi-Fi** connection. ESP-Drone comes with **simple hardware**, **clear and extensible code architecture**, and therefore this project can be used in **STEAM education** and other fields. The main code is ported from **Crazyflie** open source project with **GPL3.0** protocol.
+**ESPDrone-NH** is an open source solution based on Espressif ESP32 Wi-Fi chip, which can be controlled by a mobile APP or gamepad over **Wi-Fi** connection. ESP-Drone comes with **simple hardware**, **clear and extensible code architecture**, and therefore this project can be used in **STEAM education** and other fields. The main code is ported from **Crazyflie** open source project with **GPL3.0** protocol.
 
 <img src=./docs/_static/espdrone_nh.png alt="ESP-Drone" width=250 height=250>
 
 For more information, please check the sections below:
-* **Getting Started**: [Getting Started](https://docs.espressif.com/projects/espressif-esp-drone/en/latest/gettingstarted.html)
+* **Getting Started**: [Getting Started](<docs/nh/UAVIONICS Guide v1.0.pdf>)
 * **Hardware Schematic**：[Hardware](docs/nh/Schematic_espdrone_nh_1.2.pdf)
 * **iOS APP Source code**: [ESP-Drone-iOS](https://github.com/EspressifApps/ESP-Drone-iOS)
 * **Android APP Source code**: [ESP-Drone-Android](https://github.com/EspressifApps/ESP-Drone-Android)
@@ -20,10 +20,9 @@ For more information, please check the sections below:
 
 1. Stabilize Mode
 2. Height-hold Mode
-3. Position-hold Mode
-4. APP Control
-5. CFclient Supported
-6. [Camera streaming with httpd server](docs/nh/http_stream.md)
+3. APP Control
+4. EDclient Supported
+5. [Camera streaming with httpd server](docs/nh/http_stream.md)
 
 ### Third Party Copyrighted Code
 

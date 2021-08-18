@@ -32,7 +32,7 @@
 #include "pm_esplane.h"
 #include "log.h"
 #define DEBUG_MODULE "MOTORS"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 static uint16_t motorsConvBitsTo16(uint16_t bits);
 static uint16_t motorsConv16ToBits(uint16_t bits);

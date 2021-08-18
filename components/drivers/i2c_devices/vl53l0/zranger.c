@@ -27,7 +27,7 @@
 
 //#include "deck.h"
 #include "system.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 #include "log.h"
 #include "param.h"
 #include "range.h"
@@ -37,7 +37,7 @@
 #include "vl53l0x.h"
 #include "stabilizer_types.h"
 #include "estimator.h"
-#include "cf_math.h"
+#include "ed_math.h"
 
 // Measurement noise model
 static const float expPointA = 1.0f;

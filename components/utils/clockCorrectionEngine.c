@@ -112,7 +112,7 @@ bool clockCorrectionEngineUpdate(clockCorrectionStorage_t* storage, const double
     const bool shouldAcceptANewClockReference = emptyClockCorrectionBucket(storage);
     if (shouldAcceptANewClockReference) {
       if (CLOCK_CORRECTION_SPEC_MIN < clockCorrectionCandidate && clockCorrectionCandidate < CLOCK_CORRECTION_SPEC_MAX) {
-        // We do not fill the bucket and accept the clock correction sample as reliable: a sample is reliable when it is in the accepted noise level (which means that we already have two or more samples that are similar) and has been LP filtered. See: https://github.com/bitcraze/crazyflie-firmware/pull/328
+        // We do not fill the bucket and accept the clock correction sample as reliable: a sample is reliable when it is in the accepted noise level (which means that we already have two or more samples that are similar) and has been LP filtered. See: https://github.com/bitcraze/espdrone-firmware/pull/328
         storage->clockCorrection = clockCorrectionCandidate;
       }
     }

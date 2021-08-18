@@ -5,7 +5,7 @@
  * +------+    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
  *  ||  ||    /_____/_/\__/\___/_/   \__,_/ /___/\___/
  *
- * Crazyflie control firmware
+ * Espdrone control firmware
  *
  * Copyright (C) 2011-2012 Bitcraze AB
  *
@@ -31,7 +31,7 @@
 
 #include "config.h"
 #include "configblock.h"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 /* Internal format of the config block */
 #define MAGIC 0x43427830

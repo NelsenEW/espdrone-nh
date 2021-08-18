@@ -31,7 +31,7 @@
 #include "platform.h"
 #include "system.h"
 #define DEBUG_MODULE "APP_MAIN"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 void app_main()
 {

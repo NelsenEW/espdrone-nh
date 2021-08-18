@@ -32,7 +32,7 @@
  * FP16 or Half precision floating points is specified by IEEE 754 as binary 16.
  * (float is specified as binary 32). This implementation is NOT GUARANTEED to
  * be conform to the ieee 754 specification, it is 'just' good enough for the
- * Crazyflie usage. For more info about fp16 see
+ * Espdrone usage. For more info about fp16 see
  * http://en.wikipedia.org/wiki/Half-precision_floating-point_format
  *
  * The current implementation has the following limitation:

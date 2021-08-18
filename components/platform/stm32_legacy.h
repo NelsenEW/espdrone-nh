@@ -2,7 +2,7 @@
 #define ESP32_BRIDGE_H
 
 #include "esp_err.h"
-#include "cfassert.h"
+#include "edassert.h"
 
 #ifndef __cplusplus
 //typedef enum {FALSE = 0, TRUE = !FALSE} bool;

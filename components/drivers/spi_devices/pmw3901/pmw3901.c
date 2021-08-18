@@ -33,7 +33,7 @@
 #include "deck_spi.h"
 #include "stm32_legacy.h"
 #define DEBUG_MODULE "PMW"
-#include "debug_cf.h"
+#include "debug_ed.h"
 
 static bool isInit = false;
 

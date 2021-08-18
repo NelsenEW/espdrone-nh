@@ -6,7 +6,7 @@
 /* ============================================
 I2Cdev device library code is placed under the MIT license
 Copyright (c) 2011 Jeff Rowberg
-Adapted to Crazyflie FW by Bitcraze
+Adapted to Espdrone FW by Bitcraze
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
