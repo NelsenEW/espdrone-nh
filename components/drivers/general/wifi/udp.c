@@ -1,5 +1,6 @@
 #include "udp.h"
 #include "debug_ed.h"
+#include "static_mem.h"
 
 #define DEBUG_MODULE  "UDP"
 
@@ -21,6 +22,10 @@ static UDPPacket outPacket;
 
 static bool isUDPInit = false;
 static bool isUDPConnected = false;
+static void udp_server_rx_task(void *pvParameters);
+static void udp_server_tx_task(void *pvParameters);
+STATIC_MEM_TASK_ALLOC(udp_server_rx_task, UDP_RX_TASK_STACKSIZE);
+STATIC_MEM_TASK_ALLOC(udp_server_tx_task, UDP_TX_TASK_STACKSIZE);
 
 static uint8_t calculate_cksum(void *data, size_t len)
 {
@@ -152,13 +157,13 @@ esp_err_t udp_server_create(void *arg)
     DEBUG_PRINT_LOCAL("Socket bound, port %d", UDP_SERVER_PORT);
 
      // This should probably be reduced to a CRTP packet size
-    udpDataRx = xQueueCreate(5, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
+    udpDataRx = xQueueCreate(10, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
     DEBUG_QUEUE_MONITOR_REGISTER(udpDataRx);
-    udpDataTx = xQueueCreate(5, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
+    udpDataTx = xQueueCreate(10, sizeof(UDPPacket)); /* Buffer packets (max 64 bytes) */
     DEBUG_QUEUE_MONITOR_REGISTER(udpDataTx);
 
-    xTaskCreate(udp_server_tx_task, UDP_TX_TASK_NAME, UDP_TX_TASK_STACKSIZE, NULL, UDP_TX_TASK_PRI, NULL);
-    xTaskCreate(udp_server_rx_task, UDP_RX_TASK_NAME, UDP_RX_TASK_STACKSIZE, NULL, UDP_RX_TASK_PRI, NULL);
+    STATIC_MEM_TASK_CREATE_CORE(udp_server_tx_task, udp_server_tx_task, UDP_TX_TASK_NAME, NULL, UDP_TX_TASK_PRI, 0);
+    STATIC_MEM_TASK_CREATE_CORE(udp_server_rx_task, udp_server_rx_task, UDP_RX_TASK_NAME, NULL, UDP_RX_TASK_PRI, 0);
     isUDPInit = true;
     return ESP_OK;
 }

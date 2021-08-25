@@ -39,7 +39,7 @@
 #include "console.h"
 #include "stm32_legacy.h"
 
-#define WORKER_QUEUE_LENGTH 5
+#define WORKER_QUEUE_LENGTH 10
 
 struct worker_work {
   void (*function)(void*);

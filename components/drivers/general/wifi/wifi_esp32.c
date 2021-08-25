@@ -67,6 +67,7 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         } else{
             DEBUG_PRINT_LOCAL("Failed to connect to SSID %s", CONFIG_STA_SSID);
             stop_webserver();
+            ledseqRun(LINK_LED, seq_testPassed);
         }
     }
 }
@@ -123,7 +124,7 @@ void wifiInit(void)
     wifi_ap_init();
     wifi_sta_init();
 
-    
+    esp_wifi_set_ps(WIFI_PS_NONE);
     esp_wifi_set_mode(WIFI_MODE_APSTA);
     esp_wifi_set_config(ESP_IF_WIFI_AP, (wifi_config_t*)&apsta_wifi_config.ap);
     esp_wifi_set_config(WIFI_IF_STA, (wifi_config_t*)&apsta_wifi_config.sta);

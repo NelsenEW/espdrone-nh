@@ -77,7 +77,7 @@ typedef struct {
     logAcquireInt8 acquireInt8;
     logAcquireInt16 acquireInt16;
     logAcquireInt32 acquireInt32;
-    logAcquireFloat aquireFloat;
+    logAcquireFloat acquireFloat;
   };
 
   void* data;

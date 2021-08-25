@@ -57,7 +57,7 @@ void statsCntRateLoggerInit(statsCntRateLogger_t* logger, uint32_t averagingInte
     statsCntRateCounterInit(&logger->rateCounter, averagingIntervalMs);
 
     logger->logByFunction.data = (void*)logger;
-    logger->logByFunction.aquireFloat = statsCntRateLogHandler;
+    logger->logByFunction.acquireFloat = statsCntRateLogHandler;
 }
 
 float statsCntRateLogHandler(uint32_t timestamp, void* data) {

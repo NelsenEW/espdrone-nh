@@ -88,7 +88,6 @@ bool ledTest(void)
     vTaskDelay(M2T(250));
     // LED test end
     ledClearAll();
-    ledSet(LED_BLUE, 1);
 
     return isInit;
 }
