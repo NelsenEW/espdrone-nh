@@ -744,84 +744,91 @@ void logRunBlock(void * arg)
     {
       case LOG_UINT8:
       {
-        uint8_t v;
+        uint8_t v = 0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
           v = logByFunction->acquireUInt8(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(v));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         break;
       }
       case LOG_INT8:
       {
-        int8_t v;
+        int8_t v = 0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
           v = logByFunction->acquireInt8(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(v));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         break;
       }
       case LOG_UINT16:
       {
-        uint16_t v;
+        uint16_t v = 0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
           v = logByFunction->acquireUInt16(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(v));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         break;
       }
       case LOG_INT16:
       {
-        int16_t v;
+        int16_t v = 0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
           v = logByFunction->acquireInt16(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(v));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         break;
       }
       case LOG_UINT32:
       {
-        uint32_t v;
+        uint32_t v = 0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
           v = logByFunction->acquireUInt32(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(v));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         break;
       }
       case LOG_INT32:
       {
-        int32_t v;
+        int32_t v = 0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
           v = logByFunction->acquireInt32(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(v));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         break;
       }
       case LOG_FLOAT:
       {
-        float v;
+        float v = 0.0;
         if (ops->acquisitionType == acqType_function) {
           logByFunction_t* logByFunction = (logByFunction_t*)ops->variable;
-          v = logByFunction->aquireFloat(timestamp, logByFunction->data);
+          v = logByFunction->acquireFloat(timestamp, logByFunction->data);
         } else {
-          memcpy(&v, ops->variable, sizeof(valuef));
+          if (ops->variable)
+            memcpy(&v, ops->variable, sizeof(v));
         }
         valuei = v;
         valuef = v;

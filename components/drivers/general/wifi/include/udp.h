@@ -32,7 +32,7 @@
 
 #define UDP_RX_TX_PACKET_SIZE   (64)
 
-/* Structure used for in/out data via USB */
+/* Structure used for in/out data via UDP */
 typedef struct
 {
   uint8_t size;

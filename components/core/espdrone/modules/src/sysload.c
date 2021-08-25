@@ -103,18 +103,17 @@ static void timerHandler(xTimerHandle timer) {
     // Stack usage is displayed as nr of unused bytes at peak stack usage.
 
     DEBUG_PRINTI("Task dump\n");
-    DEBUG_PRINTI("Load\tStack left\tName\tPRI\n");
+    DEBUG_PRINTI("Load\tStack\tPRI\tCOREID\tName\n");
     for (uint32_t i = 0; i < taskCount; i++) {
       TaskStatus_t* stats = &taskStats[i];
       taskData_t* previousTaskData = getPreviousTaskData(stats->xTaskNumber);
 
       uint32_t taskRunTime = stats->ulRunTimeCounter;
       float load = f * (taskRunTime - previousTaskData->ulRunTimeCounter);
-      DEBUG_PRINTI("%.2f \t%u \t%s \t%u\n", (double)load, stats->usStackHighWaterMark, stats->pcTaskName,stats->uxBasePriority);
-
+      DEBUG_PRINTI("%.2f \t%u \t%u \t%d \t%s\n", (double)load, stats->usStackHighWaterMark, stats->uxBasePriority, (int8_t)stats->xCoreID, stats->pcTaskName);
       previousTaskData->ulRunTimeCounter = taskRunTime;
     }
-
+    DEBUG_PRINTI("Total task count: %d\n", taskCount);
     DEBUG_PRINTI("Free heap: %d bytes\n", xPortGetFreeHeapSize());
     previousTotalRunTime = totalRunTime;
 

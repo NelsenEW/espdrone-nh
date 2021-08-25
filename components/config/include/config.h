@@ -122,10 +122,9 @@
 #define ACTIVE_MARKER_TASK_PRI  3
 #define AI_DECK_TASK_PRI        3
 #define UART2_TASK_PRI          3
-#define WIFILINK_TASK_PRI       3
-#define UDP_TX_TASK_PRI         3
-#define UDP_RX_TASK_PRI         3
-#define UDP_RX2_TASK_PRI        3
+#define WIFILINK_TASK_PRI       4
+#define UDP_TX_TASK_PRI         4
+#define UDP_RX_TASK_PRI         4
 
 // Not compiled
 #if 0
@@ -187,7 +186,7 @@
 #define CRTP_TX_TASK_STACKSIZE        (2 * configBASE_STACK_SIZE)
 #define CRTP_RX_TASK_STACKSIZE        (2 * configBASE_STACK_SIZE)
 #define CRTP_RXTX_TASK_STACKSIZE      (1 * configBASE_STACK_SIZE)
-#define LOG_TASK_STACKSIZE            (5 * configBASE_STACK_SIZE)
+#define LOG_TASK_STACKSIZE            (3 * configBASE_STACK_SIZE)
 #define MEM_TASK_STACKSIZE            (2 * configBASE_STACK_SIZE)
 #define PARAM_TASK_STACKSIZE          (2 * configBASE_STACK_SIZE)
 #define SENSORS_TASK_STACKSIZE        (3 * configBASE_STACK_SIZE)
@@ -197,9 +196,8 @@
 #define SYSLINK_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
 #define USBLINK_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
 #define WIFILINK_TASK_STACKSIZE       (5 * configBASE_STACK_SIZE)
-#define UDP_TX_TASK_STACKSIZE         (4 * configBASE_STACK_SIZE)
-#define UDP_RX_TASK_STACKSIZE         (2 * configBASE_STACK_SIZE)
-#define UDP_RX2_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)
+#define UDP_TX_TASK_STACKSIZE         (3 * configBASE_STACK_SIZE)
+#define UDP_RX_TASK_STACKSIZE         (3 * configBASE_STACK_SIZE)
 #define PROXIMITY_TASK_STACKSIZE      (1 * configBASE_STACK_SIZE)
 #define EXTRX_TASK_STACKSIZE          (1 * configBASE_STACK_SIZE)
 #define UART_RX_TASK_STACKSIZE        (1 * configBASE_STACK_SIZE)

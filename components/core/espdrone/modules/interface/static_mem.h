@@ -141,4 +141,5 @@
  */
 #define STATIC_MEM_TASK_CREATE(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY) xTaskCreateStatic((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer)
 #define STATIC_MEM_TASK_CREATE_CORE(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY, CORE) xTaskCreateStaticPinnedToCore((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer, CORE)
+#define STATIC_MEM_TASK_CREATE_CORE_0(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY) xTaskCreateStaticPinnedToCore((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer, 0)
 #define STATIC_MEM_TASK_CREATE_CORE_1(NAME, FUNCTION, TASK_NAME, PARAMETERS, PRIORITY) xTaskCreateStaticPinnedToCore((FUNCTION), (TASK_NAME), osSys_ ## NAME ## StackDepth, (PARAMETERS), (PRIORITY), osSys_ ## NAME ## StackBuffer, &osSys_ ## NAME ## TaskBuffer, 1)

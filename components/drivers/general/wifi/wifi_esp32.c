@@ -124,7 +124,7 @@ void wifiInit(void)
     wifi_ap_init();
     wifi_sta_init();
 
-    
+    esp_wifi_set_ps(WIFI_PS_NONE);
     esp_wifi_set_mode(WIFI_MODE_APSTA);
     esp_wifi_set_config(ESP_IF_WIFI_AP, (wifi_config_t*)&apsta_wifi_config.ap);
     esp_wifi_set_config(WIFI_IF_STA, (wifi_config_t*)&apsta_wifi_config.sta);
